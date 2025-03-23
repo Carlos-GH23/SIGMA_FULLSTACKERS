@@ -41,7 +41,7 @@ const Login = () => {
                             </div>
                             <a href="#" className="text-purple-600 hover:underline">Olvide mi contraseña</a>
                         </div>
-                        <button className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg w-full text-lg">
+                        <button className="bg-purple-500 hover:bg-purple-300 text-white font-bold py-3 px-4 rounded-lg w-full text-lg">
                             Login
                         </button>
                     </form>
