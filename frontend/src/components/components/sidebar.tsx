@@ -8,13 +8,13 @@ const Sidebar = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className={`bg-gray-500 text-white shadow-lg h-screen p-5 pt-8 ${isOpen ? "w-64" : "w-20"} duration-300 relative`}>
+      <div className={`bg-black text-white shadow-lg h-screen p-5 pt-8 ${isOpen ? "w-64" : "w-20"} duration-300 relative`}>
         {/* Botón de expandir/contraer */}
         <button
           className="absolute top-6 right-[-15px] bg-purple-600 text-white rounded-full p-1"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <HiListBullet size={25} /> : <HiHome size={25}/>}
+          {isOpen ? <HiListBullet size={25} /> : <HiListBullet size={25}/>}
         </button>
 
         {/* Perfil */}
@@ -34,31 +34,31 @@ const Sidebar = () => {
 
         {/* Menú */}
         <ul className="space-y-4">
-          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer">
+          <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer">
             <HiHome className="text-purple-400" size={30} />
             {isOpen && <span>Inicio</span>}
           </li>
-          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer">
+          <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer">
             <HiUserGroup className="text-purple-400" size={30} />
             {isOpen && <span>Capturistas</span>}
           </li>
-          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer relative">
+          <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer relative">
             <HiMiniUsers className="text-purple-400" size={30} />
             {isOpen && <span>Clientes</span>}
 
           </li>
-          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer">
+          <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer">
             <FaCar className="text-purple-400" size={30} />
             {isOpen && <span>Vehiculos</span>}
           </li>
-          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer">
+          <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer">
             <HiMiniCalendarDays className="text-purple-400" size={30} />
             {isOpen && <span>Citas</span>}
           </li>
         </ul>
 
         {/* Logout */}
-        <div className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-red-400 hover:bg-red-200 cursor-pointer">
+        <div className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-400 hover:bg-white cursor-pointer">
           <HiArrowLeftOnRectangle size={30}/>
           {isOpen && <span>Cerrar Sesion</span>}
         </div>
