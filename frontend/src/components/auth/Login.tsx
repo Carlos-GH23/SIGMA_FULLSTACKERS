@@ -1,6 +1,6 @@
 const Login = () => {
     return (
-        <div className="h-screen flex items-center justify-center bg-gray-100 p-4">
+        <div className="h-screen flex items-center justify-center bg-gray-100 p-4 bg-linear-to-bl from-purple-500 to-orange-500">
             <div className="grid grid-cols-2 w-[60vw] h-[75vh] bg-white rounded-lg shadow-lg overflow-hidden">
                 <div
                     className="flex flex-col justify-center items-center p-8 text-white"
@@ -42,7 +42,7 @@ const Login = () => {
                             <a href="#" className="text-purple-600 hover:underline">Olvide mi contraseña</a>
                         </div>
                         <button className="bg-purple-500 hover:bg-purple-300 text-white font-bold py-3 px-4 rounded-lg w-full text-lg">
-                            Login
+                            Iniciar Sesion
                         </button>
                     </form>
                 </div>
