@@ -1,5 +1,3 @@
-import { FaCar } from "react-icons/fa";
-
 const carros = [
     {
         id: 1,

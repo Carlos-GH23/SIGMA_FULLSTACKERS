@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { HiHome,HiListBullet, HiUserGroup,HiMiniUsers,HiTruck,HiMiniCalendarDays,HiArrowLeftOnRectangle} from "react-icons/hi2";
 import { FaCar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate(); //Navegación para redireccionar
 
   return (
     <div className="flex">
@@ -34,25 +36,40 @@ const Sidebar = () => {
 
         {/* Menú */}
         <ul className="space-y-4">
-          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer">
-            <HiHome className="text-purple-400" size={30} />
+          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer"
+          onClick={() => navigate('inicio')}>
+            <div className="text-purple-400">
+              <HiHome size={30} />
+            </div>
             {isOpen && <span>Inicio</span>}
           </li>
-          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer">
-            <HiUserGroup className="text-purple-400" size={30} />
+          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer"
+          onClick={() => navigate('capturistas')}>
+            <div className="text-purple-400">
+              <HiUserGroup size={30} />
+            </div>
             {isOpen && <span>Capturistas</span>}
           </li>
-          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer relative">
-            <HiMiniUsers className="text-purple-400" size={30} />
+          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer relative"
+          onClick={() => navigate('clientes')}>
+            <div className="text-purple-400">
+              <HiMiniUsers size={30} />
+            </div>
             {isOpen && <span>Clientes</span>}
 
           </li>
-          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer">
-            <FaCar className="text-purple-400" size={30} />
+          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer"
+          onClick={() => navigate('vehiculos')}>
+            <div className="text-purple-400">
+              <FaCar size={30} />
+            </div>
             {isOpen && <span>Vehiculos</span>}
           </li>
-          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer">
-            <HiMiniCalendarDays className="text-purple-400" size={30} />
+          <li className="flex items-center gap-x-3 p-2 hover:bg-purple-500 rounded-lg cursor-pointer"
+          onClick={() => navigate('capturistas')}>
+            <div className="text-purple-400">
+              <HiMiniCalendarDays size={30} />
+            </div>
             {isOpen && <span>Citas</span>}
           </li>
         </ul>
