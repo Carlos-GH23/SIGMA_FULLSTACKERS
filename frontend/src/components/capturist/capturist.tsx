@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/sidebar";
 
-const Admin = () => {
+const Capturist = () => {
     return (
         <div className="flex">
-            <Sidebar user="admin"/>
+            <Sidebar user="capturista"/>
             <div className="p-4 w-full">
                 <Outlet /> {/* Aquí se renderizarán las rutas hijas */}
             </div>
@@ -12,4 +12,4 @@ const Admin = () => {
     );
   };
   
-export default Admin;
+export default Capturist;
