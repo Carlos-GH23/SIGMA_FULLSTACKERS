@@ -4,4 +4,5 @@ export interface UserModel {
     token: string;
     nombre: string;
     tipo: string;
+    id: number;
 }

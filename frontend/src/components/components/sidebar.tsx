@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { HiHome, HiListBullet, HiUserGroup, HiMiniUsers, HiMiniCalendarDays, HiArrowLeftOnRectangle } from "react-icons/hi2";
 import { FaCar } from "react-icons/fa";
+import { MdHomeRepairService} from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ user }: { user: string }) => {
@@ -32,28 +33,32 @@ const Sidebar = ({ user }: { user: string }) => {
             )}
           </div>
           <ul className="space-y-4">
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer">
-              <HiHome className="text-purple-400" size={30} />
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('inicio')}>
+              <HiHome className="text-purple-400" size={30}/>
               {isOpen && <span>Inicio</span>}
             </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer">
-              <HiUserGroup className="text-purple-400" size={30} />
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('capturistas')}>
+              <HiUserGroup className="text-purple-400" size={30}/>
               {isOpen && <span>Capturistas</span>}
             </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer relative">
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer relative" onClick={() => {}}>
               <HiMiniUsers className="text-purple-400" size={30} />
               {isOpen && <span>Clientes</span>}
             </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer">
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer"  onClick={() => navigate('vehiculos')}>
               <FaCar className="text-purple-400" size={30} />
               {isOpen && <span>Vehiculos</span>}
             </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer">
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer"  onClick={() => {}}>
+              <MdHomeRepairService className="text-purple-400" size={30} />
+              {isOpen && <span>Servicios</span>}
+            </li>
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => {}}>
               <HiMiniCalendarDays className="text-purple-400" size={30} />
               {isOpen && <span>Citas</span>}
             </li>
           </ul>
-          <div className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-400 hover:bg-white cursor-pointer">
+          <div className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-400 hover:bg-white cursor-pointer" onClick={() => {}}>
             <HiArrowLeftOnRectangle size={30} />
             {isOpen && <span>Cerrar Sesion</span>}
           </div>
