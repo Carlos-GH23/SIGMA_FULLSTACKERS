@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaPlus, FaSearch } from "react-icons/fa";
-import ModalForm from "../components/ModalForm";
-import AlertMessage from "../components/AlertMessage";
+import ModalForm from "../General/ModalForm";
+import AlertMessage from "../General/AlertMessage";
 import { UserModel } from "../../models/UserModel";
 
 // Datos iniciales de usuarios

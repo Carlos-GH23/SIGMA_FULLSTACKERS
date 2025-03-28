@@ -17,3 +17,7 @@ export const logout = () => {
     //localStorage.removeItem('refreshToken');
     window.location.reload(); // Recargar para actualizar estado
 }
+
+export const isAdmin = (role: string) => {
+    return role === "admin";
+}
