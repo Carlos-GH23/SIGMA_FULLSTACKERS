@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import rol
+from .models import Role
 
 class RolSerializer(serializers.ModelSerializer):
     class Meta: 
-        model = rol
+        model = Role
         fields = '__all__'
         extra_kwargs = {
             'name': {

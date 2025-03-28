@@ -7,5 +7,5 @@ router = SimpleRouter()
 router.register(r'api', UserViewSet)
 
 urlpatterns =[
-    path('', include(router.get_urls))
+    path('', include(router.urls))
 ]
