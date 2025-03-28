@@ -9,14 +9,12 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import pymysql
+pymysql.install_as_MySQLdb()
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-import pymysql
-pymysql.install_as_MySQLdb()
 
 
 # Quick-start development settings - unsuitable for production
@@ -62,6 +60,15 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+]
+
 ROOT_URLCONF = 'integradora.urls'
 
 TEMPLATES = [
@@ -89,9 +96,9 @@ WSGI_APPLICATION = 'integradora.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Gestion_vehicular',
+        'NAME': 'gestion_vehicular',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
@@ -146,7 +153,3 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:517ñ3',
-]
