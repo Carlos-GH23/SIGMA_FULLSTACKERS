@@ -5,20 +5,25 @@ import AlertMessage from "../General/AlertMessage";
 import { UserModel } from "../../models/UserModel";
 import { CrudService } from "../../services/crudService";
 import ErrorMessage from "../General/ErrorMessage";
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import SuccessMessage from "../General/SuccessMessage";
 
 
 const ListCapturistas = () => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<UserModel[]>([]);
   const [formData, setFormData] = useState<UserModel>({ id: 0, email: "", token: "", password: "", name: "", role: []});
+  const [showPassword, setShowPassword] = useState(false);
   
   const [viewModalForm, setViewModalForm] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserModel | null>(null);
   const [alertMessage, setAlertMessage] = useState(false);
-  const [erroMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const userService = new CrudService<UserModel>("http://127.0.0.1:8000/users/api/");
+  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
+
 
   const fetchUsers = async () => {
     try {
@@ -34,7 +39,6 @@ const ListCapturistas = () => {
       }));
       setUsers(mappedUsers);
     } catch (error) {
-      console.error("Error al cargar usuarios: ", error);
       setErrorMessage("Hubo un problema al cargar los usuarios. Por favor, inténtalo de nuevo más tarde.");
     } finally {
       setLoading(false);
@@ -46,35 +50,48 @@ const ListCapturistas = () => {
   }, []);
 
   //Funciones
-  const toggleModalForm = () => setViewModalForm(!viewModalForm);
+  const toggleModalForm = () => {
+    setViewModalForm(!viewModalForm);
+    setErrors({});
+  };
   
   const handleChange = (key: keyof UserModel, value: string | number | Date) => {
     setFormData({ ...formData, [key]: value });
+    setErrors((prevErrors) => ({ ...prevErrors, [key]: undefined }));
+  };
+
+  const validateForm = () => {
+    let newErrors: { name?: string; email?: string; password?: string } = {};
+
+    if (!formData.name.trim()) newErrors.name = "El nombre es obligatorio";
+    if (!formData.email.trim()) newErrors.email = "El correo es obligatorio";
+    if (!formData.password.trim()) newErrors.password = "La contraseña es obligatoria";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
   
   const handleSubmit = async () => {
-    console.log("Datos guardados:", formData);
-
+    if (!validateForm()) return; 
+    
     try {
-      if (formData.id === 0) {
-        const newUser = {
-          email: formData.email,
-          password: formData.password,
-          name: formData.name,
-          role_id: 2
-        };
-        await userService.create(newUser as UserModel);
-      } else {
-        const updatedUser = {
-          email: formData.email,
-          password: formData.password,
-          name: formData.name,
-          role_id: 2
+      const editNewUser = {
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        role_id: 2
       };
-        await userService.update(formData.id, updatedUser as UserModel);
+      if (formData.id === 0) {
+        await userService.create(editNewUser as UserModel);
+        setSuccessMessage("Capturista creado exitosamente");
+      } else {
+        await userService.update(formData.id, editNewUser as UserModel);
+        setSuccessMessage("Capturista editado exitosamente");
       }
       fetchUsers();
     } catch (error) {
+      console.error("ERROR XD: " + error);
+
       setErrorMessage(`${error}`);
     } finally {
       setAlertMessage(false);
@@ -82,7 +99,6 @@ const ListCapturistas = () => {
     }
   };
 
-  
   const handleDelete = (user: UserModel) => {
     setSelectedUser(user);
     setAlertMessage(true);
@@ -92,17 +108,16 @@ const ListCapturistas = () => {
     try {
       if (selectedUser) {
           await userService.delete(selectedUser.id);
+          setSuccessMessage("Eliminación exitosamente");
           fetchUsers();
       }
     } catch (error) {
-      console.error("Error al eliminar el usuario", error);
       setErrorMessage(`${error}`);
     } finally {
       setAlertMessage(false);
     }
   };
-
-    // Determinar si el formulario está en modo edición
+  
   const isEdit = formData.id !== 0;
 
   if (loading) {
@@ -171,7 +186,11 @@ const ListCapturistas = () => {
       {/* Botón para registrar capturista */}
       <button
         className="fixed bottom-6 right-6 bg-purple-500 text-white p-4 rounded-full shadow-lg hover:bg-purple-600 transition"
-        onClick={() => { setFormData({ id: 0, email: "", token: "", password: "", name: "", role: [] }); toggleModalForm(); }}>
+        onClick={() => {
+          setFormData({ id: 0, email: "", token: "", password: "", name: "", role: [] });
+          toggleModalForm();
+        }}
+      >
         <FaPlus size={24} />
       </button>
 
@@ -185,32 +204,47 @@ const ListCapturistas = () => {
         body={
           <>
             <div>
-              <label className="block text-sm font-medium">Nombre</label>
+              <label className="block text-sm font-medium">Nombre Completo</label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleChange("name", e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
               />
+              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
             </div>
+            
             <div>
-              <label className="block text-sm font-medium">Usuario</label>
+              <label className="block text-sm font-medium">Usuario(Correo)</label>
               <input
                 type="text"
                 value={formData.email}
                 onChange={(e) => handleChange("email", e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
               />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
-            <div>
+            
+
+            <div className="relative">
               <label className="block text-sm font-medium">Contraseña</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={(e) => handleChange("password", e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 pr-10"
               />
+              <button
+                type="button"
+                className="absolute top-9 right-3 text-gray-500 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </button>
+              {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+
             </div>
+
           </>
         }
         textConfirm={isEdit ? "Confirmación actualización" : "Confirmación registro"}
@@ -228,7 +262,10 @@ const ListCapturistas = () => {
       )}
 
       {/* ErrorMessage */}
-      {erroMessage && <ErrorMessage message={erroMessage}/>}
+      {errorMessage && <ErrorMessage message={errorMessage}/>}
+
+      {/* SuccessMessage */}
+      {successMessage && <SuccessMessage message={successMessage}/>}
     </div>
   );
 };

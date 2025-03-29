@@ -61,7 +61,7 @@ const Sidebar = ({ user }: { user: string }) => {
               <HiUserGroup className="text-purple-400" size={30}/>
               {isOpen && <span>Capturistas</span>}
             </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer relative" onClick={() => {}}>
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer relative" onClick={() => navigate('clientes')}>
               <HiMiniUsers className="text-purple-400" size={30} />
               {isOpen && <span>Clientes</span>}
             </li>

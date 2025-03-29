@@ -1,7 +1,9 @@
 export interface ClientModel {
-    nombre: string;
-    apellido: string;
-    telefono: number;
-    sexo: string;
-    fecha_inicio: Date;
+    id: number;
+    name: string;
+    surname: string;
+    telephone: string;
+    email: string;
+    gender: string;
+    register_date?: Date;
 }

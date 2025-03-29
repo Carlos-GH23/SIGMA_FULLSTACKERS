@@ -8,6 +8,7 @@ import Capturist from "../components/capturist/capturist";
 import ListCapturistas from "../components/admin/Listcapturist";
 import { isAdmin, isLoggedIn } from "../services/AuthService";
 import { AnimatePresence } from "framer-motion";
+import ListClients from "../components/components/ListClients";
 
 const AppRouter = () => {
     const location = useLocation();
@@ -29,13 +30,14 @@ const AppRouter = () => {
                     <Route path="/admin" element={<Admin />}>
                         <Route path="vehiculos" element={<ListCars />} />
                         <Route path="capturistas" element={<ListCapturistas />} />
+                        <Route path="clientes" element={<ListClients />} />
                     </Route>
                 )}
 
                 {/* Rutas de Capturistas (solo accesibles si NO es admin) */}
                 {!admin && loggedIn && (
                     <Route path="/capturista" element={<Capturist/>}>
-                    
+                        <Route path="clientes" element={<ListClients />} />
                     </Route>
                 )}
 
