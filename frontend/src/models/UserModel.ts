@@ -1,11 +1,11 @@
 export interface UserModel {
-    username: string;
-    password: string;
-    token: string;
-    nombre: string;
-    tipo: string;
     id: number;
+    email: string;
+    token: string;
+    password: string;
+    name: string;
     role: RoleModel[];
+    role_id?: number;
 }
 
 

@@ -1,5 +1,4 @@
 import axios from "axios";
-
 import { UserModel } from "../models/UserModel";
 
 const API_URL = "http://127.0.0.1:8000/users/api/1/" //Se cambiara la URL a la indicada

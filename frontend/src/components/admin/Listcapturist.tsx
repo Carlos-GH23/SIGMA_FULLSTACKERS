@@ -1,76 +1,117 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus, FaSearch } from "react-icons/fa";
 import ModalForm from "../General/ModalForm";
 import AlertMessage from "../General/AlertMessage";
 import { UserModel } from "../../models/UserModel";
+import { CrudService } from "../../services/crudService";
+import ErrorMessage from "../General/ErrorMessage";
 
-// Datos iniciales de usuarios
-/*const initialUsers: UserModel[] = [
-  {
-    id: 1,
-    nombre: "Sebastián Quintero Martínez",
-    username: "sebastian.quinteromtz@gmail.com",
-    password: "***********",
-    token: "12345",
-    tipo: "Admin"
-  },
-  {
-    id: 2,
-    nombre: "Leticia Martínez Peralta",
-    username: "leticiamape@gmail.com",
-    password: "***********",
-    token: "67890",
-    tipo: "Usuario"
-  }
-];*/
 
 
 const ListCapturistas = () => {
-    // Estado para la lista de usuarios
+  const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<UserModel[]>([]);
-    // Estado para mostrar/ocultar el modal de formulario
+  const [formData, setFormData] = useState<UserModel>({ id: 0, email: "", token: "", password: "", name: "", role: []});
+  
   const [viewModalForm, setViewModalForm] = useState(false);
-    // Estado para almacenar los datos del formulario
-  const [formData, setFormData] = useState<UserModel>({ id: 0, nombre: "", username: "", password: "", token: "", tipo: "", role: []});
-    // Estado para mostrar/ocultar la alerta de confirmación
-  const [alertMessage, setAlertMessage] = useState(false);
-    // Estado para el usuario seleccionado para eliminar
   const [selectedUser, setSelectedUser] = useState<UserModel | null>(null);
+  const [alertMessage, setAlertMessage] = useState(false);
+  const [erroMessage, setErrorMessage] = useState("");
+
+  const userService = new CrudService<UserModel>("http://127.0.0.1:8000/users/api/");
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const usersData = await userService.getAll();
+      const mappedUsers = usersData.map((user: any) => ({
+        id: user.id,
+        email: user.email,
+        token: user.token,
+        password: "",
+        name: user.name,
+        role: user.role ? [user.role.name] : [],
+      }));
+      setUsers(mappedUsers);
+    } catch (error) {
+      console.error("Error al cargar usuarios: ", error);
+      setErrorMessage("Hubo un problema al cargar los usuarios. Por favor, inténtalo de nuevo más tarde.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   //Funciones
-    // Alternar la visibilidad del modal de formulario
   const toggleModalForm = () => setViewModalForm(!viewModalForm);
-    // Manejar cambios en los campos del formulario
+  
   const handleChange = (key: keyof UserModel, value: string | number | Date) => {
     setFormData({ ...formData, [key]: value });
   };
   
-    // Manejar el envio del formulario para registrar o editar un usuario
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("Datos guardados:", formData);
-    if (formData.id === 0) {
-      setUsers([...users, { ...formData, id: users.length + 1 }]);
-    } else {
-      setUsers(users.map(user => (user.id === formData.id ? formData : user)));
+
+    try {
+      if (formData.id === 0) {
+        const newUser = {
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          role_id: 2
+        };
+        await userService.create(newUser as UserModel);
+      } else {
+        const updatedUser = {
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          role_id: 2
+      };
+        await userService.update(formData.id, updatedUser as UserModel);
+      }
+      fetchUsers();
+    } catch (error) {
+      setErrorMessage(`${error}`);
+    } finally {
+      setAlertMessage(false);
+      toggleModalForm();
     }
-    toggleModalForm();
   };
 
-    // Mostrar alerta antes de eliminar un usuario
+  
   const handleDelete = (user: UserModel) => {
     setSelectedUser(user);
     setAlertMessage(true);
   };
 
-    // Confirmar y eliminar el usuario
-  const confirmDelete = () => {
-    console.log("Eliminando capturista:", selectedUser);
-    setUsers(users.filter(user => user.id !== selectedUser?.id));
-    setAlertMessage(false);
+  const confirmDelete = async () => {
+    try {
+      if (selectedUser) {
+          await userService.delete(selectedUser.id);
+          fetchUsers();
+      }
+    } catch (error) {
+      console.error("Error al eliminar el usuario", error);
+      setErrorMessage(`${error}`);
+    } finally {
+      setAlertMessage(false);
+    }
   };
 
     // Determinar si el formulario está en modo edición
   const isEdit = formData.id !== 0;
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-4 w-full ">
@@ -93,8 +134,8 @@ const ListCapturistas = () => {
           <thead>
             <tr className="bg-gray-100 text-gray-700 text-left">
               <th className="px-6 py-3">ID</th>
+              <th className="px-6 py-3">Correo</th>
               <th className="px-6 py-3">Nombre</th>
-              <th className="px-6 py-3">Username</th>
               <th className="px-6 py-3">Acciones</th>
             </tr>
           </thead>
@@ -104,11 +145,11 @@ const ListCapturistas = () => {
                 <td className="px-6 py-4">{user.id}</td>
                 <td className="px-6 py-4 flex items-center space-x-3">
                   <span className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 font-semibold">
-                    {user.nombre.charAt(0)}
+                    {user.email.charAt(0)}
                   </span>
-                  <span>{user.nombre}</span>
+                  <span>{user.email}</span>
                 </td>
-                <td className="px-6 py-4">{user.username}</td>
+                <td className="px-6 py-4">{user.name}</td>
                 <td className="px-6 py-4 flex space-x-2">
                   <button
                     className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition cursor-pointer"
@@ -130,7 +171,7 @@ const ListCapturistas = () => {
       {/* Botón para registrar capturista */}
       <button
         className="fixed bottom-6 right-6 bg-purple-500 text-white p-4 rounded-full shadow-lg hover:bg-purple-600 transition"
-        onClick={() => { setFormData({ id: 0, nombre: "", username: "", password: "", token: "", tipo: "", role:[]}); toggleModalForm(); }}>
+        onClick={() => { setFormData({ id: 0, email: "", token: "", password: "", name: "", role: [] }); toggleModalForm(); }}>
         <FaPlus size={24} />
       </button>
 
@@ -147,8 +188,8 @@ const ListCapturistas = () => {
               <label className="block text-sm font-medium">Nombre</label>
               <input
                 type="text"
-                value={formData.nombre}
-                onChange={(e) => handleChange("nombre", e.target.value)}
+                value={formData.name}
+                onChange={(e) => handleChange("name", e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
               />
             </div>
@@ -156,8 +197,8 @@ const ListCapturistas = () => {
               <label className="block text-sm font-medium">Usuario</label>
               <input
                 type="text"
-                value={formData.username}
-                onChange={(e) => handleChange("username", e.target.value)}
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
               />
             </div>
@@ -180,12 +221,14 @@ const ListCapturistas = () => {
       {alertMessage && selectedUser && (
         <AlertMessage
           title="Confirmar Eliminación"
-          body={`¿Estás seguro de que deseas eliminar a ${selectedUser.nombre}?`}
+          body={`¿Estás seguro de que deseas eliminar a ${selectedUser.name}?`}
           onCancel={() => setAlertMessage(false)}
           onConfirm={confirmDelete}
         />
       )}
 
+      {/* ErrorMessage */}
+      {erroMessage && <ErrorMessage message={erroMessage}/>}
     </div>
   );
 };
