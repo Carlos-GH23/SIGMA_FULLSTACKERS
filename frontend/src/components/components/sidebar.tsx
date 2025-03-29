@@ -3,10 +3,30 @@ import { HiHome, HiListBullet, HiUserGroup, HiMiniUsers, HiMiniCalendarDays, HiA
 import { FaCar } from "react-icons/fa";
 import { MdHomeRepairService} from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { logout } from "../../services/AuthService";
 
 const Sidebar = ({ user }: { user: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate(); //Navegación para redireccionar
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Tu sesión se cerrará.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+      }
+    });
+  };
+
   if (user === 'admin')
     return (
       <div className="flex">
@@ -58,7 +78,7 @@ const Sidebar = ({ user }: { user: string }) => {
               {isOpen && <span>Citas</span>}
             </li>
           </ul>
-          <div className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-400 hover:bg-white cursor-pointer" onClick={() => {}}>
+          <div className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-400 hover:bg-white cursor-pointer" onClick={handleLogout}>
             <HiArrowLeftOnRectangle size={30} />
             {isOpen && <span>Cerrar Sesion</span>}
           </div>

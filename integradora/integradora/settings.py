@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+#CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
@@ -101,9 +101,6 @@ DATABASES = {
         'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        }
     }
 }
 

@@ -5,4 +5,11 @@ export interface UserModel {
     nombre: string;
     tipo: string;
     id: number;
+    role: RoleModel[];
+}
+
+
+export interface RoleModel {
+    id: number;
+    name: string;
 }

@@ -16,7 +16,7 @@ const Login = () => {
             const response = await login(username, password);
             console.log(response);
             //Regresar a home
-            //navigate("/");
+            navigate("/admin");
         } catch (err) {
             setErrorMessage("Usuario o contraseña incorrectos");
         }

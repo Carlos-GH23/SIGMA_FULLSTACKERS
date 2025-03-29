@@ -5,7 +5,7 @@ import AlertMessage from "../General/AlertMessage";
 import { UserModel } from "../../models/UserModel";
 
 // Datos iniciales de usuarios
-const initialUsers: UserModel[] = [
+/*const initialUsers: UserModel[] = [
   {
     id: 1,
     nombre: "Sebastián Quintero Martínez",
@@ -22,16 +22,16 @@ const initialUsers: UserModel[] = [
     token: "67890",
     tipo: "Usuario"
   }
-];
+];*/
 
 
 const ListCapturistas = () => {
     // Estado para la lista de usuarios
-  const [users, setUsers] = useState<UserModel[]>(initialUsers);
+  const [users, setUsers] = useState<UserModel[]>([]);
     // Estado para mostrar/ocultar el modal de formulario
   const [viewModalForm, setViewModalForm] = useState(false);
     // Estado para almacenar los datos del formulario
-  const [formData, setFormData] = useState<UserModel>({ id: 0, nombre: "", username: "", password: "", token: "", tipo: "" });
+  const [formData, setFormData] = useState<UserModel>({ id: 0, nombre: "", username: "", password: "", token: "", tipo: "", role: []});
     // Estado para mostrar/ocultar la alerta de confirmación
   const [alertMessage, setAlertMessage] = useState(false);
     // Estado para el usuario seleccionado para eliminar
@@ -130,7 +130,7 @@ const ListCapturistas = () => {
       {/* Botón para registrar capturista */}
       <button
         className="fixed bottom-6 right-6 bg-purple-500 text-white p-4 rounded-full shadow-lg hover:bg-purple-600 transition"
-        onClick={() => { setFormData({ id: 0, nombre: "", username: "", password: "", token: "", tipo: "" }); toggleModalForm(); }}>
+        onClick={() => { setFormData({ id: 0, nombre: "", username: "", password: "", token: "", tipo: "", role:[]}); toggleModalForm(); }}>
         <FaPlus size={24} />
       </button>
 
