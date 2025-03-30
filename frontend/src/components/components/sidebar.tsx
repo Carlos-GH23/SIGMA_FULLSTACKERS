@@ -8,7 +8,7 @@ import { logout } from "../../services/AuthService";
 
 const Sidebar = ({ user }: { user: string }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate(); //Navegación para redireccionar
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     Swal.fire({
@@ -69,7 +69,7 @@ const Sidebar = ({ user }: { user: string }) => {
               <FaCar className="text-purple-400" size={30} />
               {isOpen && <span>Vehiculos</span>}
             </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer"  onClick={() => {}}>
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer"  onClick={() => navigate('servicios')}>
               <MdHomeRepairService className="text-purple-400" size={30} />
               {isOpen && <span>Servicios</span>}
             </li>
@@ -113,25 +113,28 @@ const Sidebar = ({ user }: { user: string }) => {
           </div>
 
           <ul className="space-y-4">
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer"
-              onClick={() => navigate('inicio')}>
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('inicio')}>
               <HiHome className="text-purple-400" size={30} />
               {isOpen && <span>Inicio</span>}
             </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer relative">
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer relative" onClick={() => navigate('clientes')}>
               <HiMiniUsers className="text-purple-400" size={30} />
               {isOpen && <span>Clientes</span>}
             </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer">
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('vehiculos')}>
               <FaCar className="text-purple-400" size={30} />
               {isOpen && <span>Vehiculos</span>}
             </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer">
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer"  onClick={() => navigate('servicios')}>
+              <MdHomeRepairService className="text-purple-400" size={30} />
+              {isOpen && <span>Servicios</span>}
+            </li>
+            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => {}}>
               <HiMiniCalendarDays className="text-purple-400" size={30} />
               {isOpen && <span>Citas</span>}
             </li>
           </ul>
-          <div className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-400 hover:bg-white cursor-pointer">
+          <div className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-400 hover:bg-white cursor-pointer" onClick={handleLogout}>
             <HiArrowLeftOnRectangle size={30} />
             {isOpen && <span>Cerrar Sesion</span>}
           </div>

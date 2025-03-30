@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ClientModel } from "../../models/ClientModel";
 import { CrudService } from "../../services/crudService";
-import { FaPlus, FaSearch } from "react-icons/fa";
+import { FaPen, FaPlus, FaSearch, FaTrash } from "react-icons/fa";
 import ModalForm from "../General/ModalForm";
 import AlertMessage from "../General/AlertMessage";
 import ErrorMessage from "../General/ErrorMessage";
@@ -35,7 +35,7 @@ const ListClients = () => {
             }));
             setClients(mappedClients);
         } catch (error) {
-            setErrorMessage("Hubo un problema al cargar los usuarios. Por favor, inténtalo de nuevo más tarde.");
+            setErrorMessage("Hubo un problema al cargar los clientes. Por favor, inténtalo de nuevo más tarde.");
         } finally {
             setLoading(false);
         }
@@ -169,16 +169,16 @@ const ListClients = () => {
                             <td className="px-6 py-4">{client.gender}</td>
                             <td className="px-6 py-4">{client.register_date ? new Date(client.register_date).toLocaleDateString() : new Date().toLocaleDateString()}</td>
                             <td className="px-6 py-4 flex space-x-2">
-                            <button
-                                className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition cursor-pointer"
-                                onClick={() => { setFormData(client); toggleModalForm(); }}>
-                                Editar
-                            </button>
-                            <button
-                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 transition cursor-pointer"
-                                onClick={() => handleDelete(client)}>
-                                Eliminar
-                            </button>
+                                <button
+                                    className="w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-blue-600 transition cursor-pointer"
+                                    onClick={() => { setFormData(client); toggleModalForm(); }}>
+                                        <FaPen size={18} />
+                                </button>
+                                <button
+                                    className="w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-700 transition cursor-pointer"
+                                    onClick={() => handleDelete(client)}>
+                                        <FaTrash size={18} />
+                                </button>
                             </td>
                         </tr>
                         ))}
@@ -188,7 +188,7 @@ const ListClients = () => {
 
             {/* Botón para registrar */}
             <button
-            className="fixed bottom-6 right-6 bg-purple-500 text-white p-4 rounded-full shadow-lg hover:bg-purple-600 transition"
+            className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition"
             onClick={() => {
                 setFormData({ id: 0, name: "", surname: "", telephone: "", email: "", gender: "" });
                 toggleModalForm();
@@ -252,15 +252,17 @@ const ListClients = () => {
                     
                     <div>
                         <label className="block text-sm font-medium">Genero</label>
-                        <input
-                            type="text"
+                        <select
                             value={formData.gender}
                             onChange={(e) => handleChange("gender", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400">
+                            <option value="" disabled hidden>Seleccionar</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Sin definir">Sin definir</option>
+                        </select>
                         {errors.gender && <p className="text-red-500 text-sm">{errors.gender}</p>}
                     </div>
-                    
                 </>
                 }
                 textConfirm={isEdit ? "Confirmación actualización" : "Confirmación registro"}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaPlus, FaSearch } from "react-icons/fa";
+import { FaPen, FaPlus, FaSearch, FaTrash } from "react-icons/fa";
 import ModalForm from "../General/ModalForm";
 import AlertMessage from "../General/AlertMessage";
 import { UserModel } from "../../models/UserModel";
@@ -12,7 +12,7 @@ import SuccessMessage from "../General/SuccessMessage";
 const ListCapturistas = () => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<UserModel[]>([]);
-  const [formData, setFormData] = useState<UserModel>({ id: 0, email: "", token: "", password: "", name: "", role: []});
+  const [formData, setFormData] = useState<UserModel>({ id: 0, email: "", token: "", password: "", name: "", role: ""});
   const [showPassword, setShowPassword] = useState(false);
   
   const [viewModalForm, setViewModalForm] = useState(false);
@@ -35,7 +35,7 @@ const ListCapturistas = () => {
         token: user.token,
         password: "",
         name: user.name,
-        role: user.role ? [user.role.name] : [],
+        role: user.role,
       }));
       setUsers(mappedUsers);
     } catch (error) {
@@ -165,16 +165,16 @@ const ListCapturistas = () => {
                   <span>{user.email}</span>
                 </td>
                 <td className="px-6 py-4">{user.name}</td>
-                <td className="px-6 py-4 flex space-x-2">
+                <td className="px-6 py-4 flex space-x-3">
                   <button
-                    className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition cursor-pointer"
+                    className="w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-blue-600 transition cursor-pointer"
                     onClick={() => { setFormData(user); toggleModalForm(); }}>
-                    Editar
+                      <FaPen size={18} />
                   </button>
                   <button
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 transition cursor-pointer"
+                    className="w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-700 transition cursor-pointer"
                     onClick={() => handleDelete(user)}>
-                    Eliminar
+                    <FaTrash size={18} />
                   </button>
                 </td>
               </tr>
@@ -185,9 +185,9 @@ const ListCapturistas = () => {
 
       {/* Botón para registrar capturista */}
       <button
-        className="fixed bottom-6 right-6 bg-purple-500 text-white p-4 rounded-full shadow-lg hover:bg-purple-600 transition"
+        className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition"
         onClick={() => {
-          setFormData({ id: 0, email: "", token: "", password: "", name: "", role: [] });
+          setFormData({ id: 0, email: "", token: "", password: "", name: "", role: "" });
           toggleModalForm();
         }}
       >
@@ -215,7 +215,7 @@ const ListCapturistas = () => {
             </div>
             
             <div>
-              <label className="block text-sm font-medium">Usuario(Correo)</label>
+              <label className="block text-sm font-medium">Usuario (Correo)</label>
               <input
                 type="text"
                 value={formData.email}
@@ -225,7 +225,6 @@ const ListCapturistas = () => {
               {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
             
-
             <div className="relative">
               <label className="block text-sm font-medium">Contraseña</label>
               <input
@@ -239,12 +238,10 @@ const ListCapturistas = () => {
                 className="absolute top-9 right-3 text-gray-500 cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                {showPassword ? <FaEye size={20} /> : <FaEyeSlash size={20} />}
               </button>
               {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-
             </div>
-
           </>
         }
         textConfirm={isEdit ? "Confirmación actualización" : "Confirmación registro"}

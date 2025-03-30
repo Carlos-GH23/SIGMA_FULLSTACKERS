@@ -1,6 +1,7 @@
 import { useEffect, ReactNode, useState } from "react";
 import AlertMessage from "./AlertMessage"; 
 import { GoAlert } from "react-icons/go";
+import { IoClose } from "react-icons/io5";
 
 interface ModalProps {
     isOpen: boolean; // Indica si el modal está abierto o cerrado.
@@ -37,23 +38,23 @@ const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", text
             <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                 <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg sm:max-w-md md:max-w-xl lg:max-w-2xl min-h-[40vh] max-h-[90vh] overflow-y-auto relative">
                     
-                    <button onClick={onClose} className="absolute top-2 right-2 text-purple-500 hover:text-gray-700 cursor-pointer">
-                        ✖
+                    <button onClick={onClose} className="absolute top-2 right-2 text-red-500 hover:text-red-700 cursor-pointer">
+                        <IoClose size={30} />
                     </button>
 
                     <h2 className="text-xl font-semibold text-center mb-4">{title}</h2>
 
                     <div className="mt-4 grid grid-cols-1 gap-3">{body}</div>
 
-                    <div className="flex justify-end mt-5 space-x-3">
+                    <div className="grid grid-cols-3 gap-3 mt-5">
                         <button 
                             onClick={onClose} 
-                            className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg">
+                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg col-span-1">
                             {textActionCancel}
                         </button>
                         <button 
                             onClick={() => setShowAlert(true)} 
-                            className="bg-purple-500 hover:bg-purple-300 text-white font-bold py-3 px-4 rounded-lg">
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg col-span-2">
                             {textActionOk}
                         </button>
                     </div>

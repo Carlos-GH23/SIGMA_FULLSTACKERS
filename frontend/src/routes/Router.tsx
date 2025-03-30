@@ -14,11 +14,7 @@ const AppRouter = () => {
     const location = useLocation();
     const loggedIn = isLoggedIn();
     const admin = isAdmin();
-
-    console.log("admin: ", admin);
-    console.log("loggedIn: ", loggedIn);
-    console.log("location: ", location);
-
+    
     return (
         <AnimatePresence>
             <Routes location={location} key={location.pathname}>
@@ -28,9 +24,10 @@ const AppRouter = () => {
                 {/* Rutas del Admin (solo accesibles si es admin) */}
                 {admin && (
                     <Route path="/admin" element={<Admin />}>
-                        <Route path="vehiculos" element={<ListCars />} />
                         <Route path="capturistas" element={<ListCapturistas />} />
                         <Route path="clientes" element={<ListClients />} />
+                        <Route path="vehiculos" element={<ListCars />} />
+                        <Route path="servicios" element={<ListCars />} />
                     </Route>
                 )}
 
@@ -38,6 +35,8 @@ const AppRouter = () => {
                 {!admin && loggedIn && (
                     <Route path="/capturista" element={<Capturist/>}>
                         <Route path="clientes" element={<ListClients />} />
+                        <Route path="vehiculos" element={<ListCars />} />
+                        <Route path="servicios" element={<ListCars />} />
                     </Route>
                 )}
 

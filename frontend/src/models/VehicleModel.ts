@@ -1,12 +1,11 @@
-import { ClientModel } from "./ClientModel";
-
 export interface VehicleModel {
-    marca: string;
-    modelo: string;
-    numero_seguro: number;
-    anio: number;
-    matrícula: string;
+    id: number;
+    brand: string;
+    model: string;
+    service_number: number;
+    year: number;
+    plate: string;
     color: string;
-    tipo_combustible: string;
-    cliente: ClientModel;
+    fuel_type: string;
+    client: number;
 }

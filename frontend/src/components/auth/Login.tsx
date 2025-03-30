@@ -2,21 +2,19 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../services/AuthService";
 import React, { useState } from "react";
 import ErrorMessage from "../General/ErrorMessage";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [erroMessage, setErrorMessage] = useState("");
-    const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await login(username, password);
-            console.log(response);
-            //Regresar a home
-            navigate("/admin");
+            await login(username, password);
         } catch (err) {
             setErrorMessage("Usuario o contraseña incorrectos");
         }
@@ -49,15 +47,22 @@ const Login = () => {
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
-                        <div>
+                        <div className="relative">
                             <label htmlFor="password" className="block text-gray-700 text-lg mb-1">Constraseña</label>
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 id="password"
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
                                 required
                                 onChange={(e) => setPassword(e.target.value)}
                             />
+                            <button
+                                type="button"
+                                className="absolute top-12 right-3 text-gray-500 cursor-pointer"
+                                onClick={() => setShowPassword(!showPassword)}
+                                >
+                                {showPassword ? <FaEye size={20} /> : <FaEyeSlash size={20} />}
+                            </button>
                         </div>
                         <div className="flex justify-between items-center text-sm">
                             <div>

@@ -1,23 +1,25 @@
 import axios from "axios";
 import { UserModel } from "../models/UserModel";
 
-const API_URL = "http://127.0.0.1:8000/users/api/1/" //Se cambiara la URL a la indicada
+const API_URL = "http://127.0.0.1:8000/users/token/" //Se cambiara la URL a la indicada
 
 export const login = async (email: string, password: string) => {
-    console.log(email);
-    console.log(password);
-    const response = await axios.get(API_URL);
+    const response = await axios.post(API_URL, {email, password});
     console.log(response.data);
 
-    if(response.data){
-        const user: UserModel = response.data;
-        console.log("user: " + user);
+    if(response.data.access){
+        const user: UserModel = response.data.user;
         localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("accessToken",response.data.access);
+        localStorage.setItem("refreshToken",response.data.refresh);
     }
-    return response.data;
+    window.location.reload();
+    //return response.data;
 }
 
 export const logout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     window.location.href = "/";
     //window.location.reload();
@@ -30,9 +32,7 @@ export const getUser = (): UserModel | null => {
 
 export const isAdmin = (): boolean => {
     const user = getUser();
-    const roles = Array.isArray(user?.role) ? user.role : [user?.role];
-
-    return roles.some((r) => r?.name === "admin");
+    return user?.role === "admin";
 };
 
 

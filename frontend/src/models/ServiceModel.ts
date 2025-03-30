@@ -1,12 +1,19 @@
-import { VehicleModel } from "./VehicleModel";
-import { DetailsModel } from "./DetailsModel";
+/*import { VehicleModel } from "./VehicleModel";
+import { DetailsModel } from "./DetailsModel";*/
 
 export interface ServiceModel {
-    fecha: Date;
+    id: number;
+    name: string;
+    description: string;
+    date?: Date;
+    cost: number;
+    vehicle: number;
+
+    /*fecha: Date;
     Vehículo: VehicleModel;
     tipo_servicio: string;
     descripción: string;
     costo: number;
     comentarios: string;
-    detalles: DetailsModel;
+    detalles: DetailsModel;*/
 }

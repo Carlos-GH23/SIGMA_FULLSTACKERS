@@ -4,7 +4,7 @@ export interface UserModel {
     token: string;
     password: string;
     name: string;
-    role: RoleModel[];
+    role: string;
     role_id?: number;
 }
 
