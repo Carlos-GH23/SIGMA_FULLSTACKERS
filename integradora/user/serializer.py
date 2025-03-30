@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import User
 from rol.models import Role
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,3 +47,44 @@ class UserSerializer(serializers.ModelSerializer):
         if len(value) < 8:
             raise serializers.ValidationError("La contraseña debe tener al menos 8 caracteres")
         return value
+    
+    def create(self, validated_data):
+        # Extraemos la contraseña de los datos validados
+        password = validated_data.pop('password', None)
+        
+        # Creamos el usuario
+        user = super().create(validated_data)
+        
+        # Encriptamos la contraseña antes de guardarla
+        if password:
+            user.set_password(password)  # Encriptamos la contraseña
+            user.save()  # Guardamos el usuario con la contraseña encriptada
+        
+        return user
+
+    def update(self, instance, validated_data):
+        # Si la contraseña está en los datos validados, la encriptamos
+        password = validated_data.pop('password', None)
+        
+        # Actualizamos los campos del usuario
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        # Encriptamos la contraseña si se proporciona una nueva
+        if password:
+            instance.set_password(password)
+            
+        instance.save()
+        return instance
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['email'] = user.email
+        return token
+    
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
