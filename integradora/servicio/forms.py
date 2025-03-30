@@ -14,11 +14,16 @@ class ServiceForm(forms.ModelForm):
             'date': forms.DateInput(attrs={
                 'type': 'date',
                 'class': 'form-control'
+            }),
+            'image_url': forms.URLInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'URL de la imagen'
             })
         }
         labels = {
             'cost': 'Costo del Servicio',
-            'date': 'Fecha del Servicio'
+            'date': 'Fecha del Servicio',
+            'image_url': 'URL de la imagen'
         }
 
     def clean_cost(self):

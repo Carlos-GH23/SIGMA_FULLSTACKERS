@@ -84,6 +84,19 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         return token
     
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = self.user  # Usuario autenticado
+        
+        # Agregamos los datos del usuario a la respuesta
+        data['user'] = {
+            'id': user.id,
+            'email': user.email,
+            'name': user.name,
+            'role': user.role.name if user.role else None
+        }
+        return data
+    
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

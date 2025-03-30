@@ -9,6 +9,7 @@ class Vehicle(models.Model):
     plate = models.CharField(max_length=20, unique=True)
     color = models.CharField(max_length=50)
     fuel_type = models.CharField(max_length=20)
+    image_url = models.URLField(max_length=500, blank=True, null=True)
     client = models.ForeignKey(
         Client,  
         on_delete=models.CASCADE,

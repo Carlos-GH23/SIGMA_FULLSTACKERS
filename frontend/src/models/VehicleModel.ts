@@ -8,4 +8,5 @@ export interface VehicleModel {
     color: string;
     fuel_type: string;
     client: number;
+    image_url?: string;
 }

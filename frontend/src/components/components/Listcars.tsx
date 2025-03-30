@@ -10,7 +10,7 @@ import { FaPlus } from "react-icons/fa";
 const ListCars = () => {
     const [loading, setLoading] = useState(true);
     const [vehicles, setVehicles] = useState<VehicleModel[]>([]);
-    const [formData, setFormData] = useState<VehicleModel>({ id: 0, brand: "", model: "", service_number: 0, year: 0, plate: "", color: "", fuel_type: "", client: 0});
+    const [formData, setFormData] = useState<VehicleModel>({ id: 0, brand: "", model: "", service_number: 0, year: 0, plate: "", color: "", fuel_type: "", client: 0, image_url: "",});
 
     const [viewModalForm, setViewModalForm] = useState(false);
     const [selectedVehicle, setSelectedVehicle] = useState<VehicleModel | null>(null);
@@ -19,7 +19,7 @@ const ListCars = () => {
     const [successMessage, setSuccessMessage] = useState("");
 
     const crudService = new CrudService<VehicleModel>("http://127.0.0.1:8000/vehiculo/api/");
-    const [errors, setErrors] = useState<{ brand?: string; model?: string; service_number?: string; year?: string; plate?: string, color?: string, fuel_type?: string, client?: string }>({});
+    const [errors, setErrors] = useState<{ brand?: string; model?: string; service_number?: string; year?: string; plate?: string, color?: string, fuel_type?: string, client?: string, image_url?: string }>({});
 
     const fetchVehicles = async () => {
         try {
@@ -80,6 +80,7 @@ const ListCars = () => {
                 color: formData.color,
                 fuel_type: formData.fuel_type,
                 client: formData.client,
+                image_url: formData.image_url,
             };
             if (formData.id === 0) {
                 await crudService.create(editNewVehicle as VehicleModel);
@@ -130,39 +131,49 @@ const ListCars = () => {
         <div className="h-[20vh]">
             {/* Encabezado */}
             <div className="w-full h-15 rounded-lg bg-purple-500 text-white mb-2 flex justify-center items-center">
-                <h2 className="text-2xl font-bold text-center">Clientes</h2>
+                <h2 className="text-2xl font-bold text-center">Vehiculos</h2>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 ">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
                 {vehicles.map((vehicle) => (
-                    <div className="rounded-lg shadow-lg  h-[250px]">
-                        <div className="h-[100px] md:h-[150px] rounded-lg shadow-lg"
-                            style={{
-                                backgroundImage: `url('https://i.pinimg.com/736x/a5/bd/bb/a5bdbb181de3af001453c620c8b8dae6.jpg')`,
-                                backgroundSize: "cover",
-                                backgroundPosition: "center"
-                            }}>
-                        </div>
-                        <div className="h-[50px] justify-start items-center">
-                            <ul className="text-purple-500  flex inline-flex justify-start items-center p-2">
-                            <li className="text-md ml-2 w-1/2 ">Modelo:{vehicle.model}</li>
-                            <li className="text-md ml-2 w-1/2">Marca:{vehicle.brand}</li>
-                            <li className="text-md ml-2 w-1/2">Modelo:{vehicle.model}</li>
-                            </ul>
+                    <div key={vehicle.id} className="rounded-xl shadow-lg bg-white overflow-hidden min-h-[320px] transition-transform transform hover:scale-105">
+                    {/* Imagen del vehículo */}
+                    <div
+                        className="h-[180px] w-full bg-gray-200 rounded-t-xl"
+                        style={{
+                        backgroundImage: `url('${vehicle.image_url || 'https://i.pinimg.com/736x/a5/bd/bb/a5bdbb181de3af001453c620c8b8dae6.jpg'}')`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center"
+                        }}
+                    ></div>
 
-                            <div className="h-[50px] flex p-2 gap-2">
-                                <button 
-                                    className="bg-red-500 hover:bg-red-300 text-white font-bold py-2 px-4 rounded-lg w-1/3 text-sm"
-                                    onClick={() => handleDelete(vehicle)}
-                                >
-                                    Eliminar
-                                </button>
-                                <button 
-                                    className="bg-purple-500 hover:bg-purple-300 text-white font-bold py-2 px-4 rounded-lg w-2/3 text-sm"
-                                    onClick={() => { setFormData(vehicle); toggleModalForm(); }}>
-                                    Detalles
-                                </button>
-                            </div>
+                    {/* Contenido */}
+                    <div className="p-4">
+                        <h3 className="text-lg font-bold text-purple-700 text-center mb-2">{vehicle.brand} {vehicle.model}</h3>
+
+                        {/* Contenedor de detalles en dos columnas */}
+                        <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                        <p><span className="font-semibold text-gray-800">Año:</span> {vehicle.year}</p>
+                        <p><span className="font-semibold text-gray-800">Placa:</span> {vehicle.plate}</p>
+                        <p><span className="font-semibold text-gray-800">Color:</span> {vehicle.color}</p>
+                        <p><span className="font-semibold text-gray-800">Combustible:</span> {vehicle.fuel_type}</p>
                         </div>
+
+                        {/* Botones con diseño 1/3 - 2/3 */}
+                        <div className="mt-4 flex gap-2">
+                        <button 
+                            className="bg-red-500 hover:bg-red-300 text-white font-bold py-2 px-4 rounded-lg w-1/3 text-sm transition"
+                            onClick={() => handleDelete(vehicle)}
+                        >
+                            Eliminar
+                        </button>
+                        <button 
+                            className="bg-purple-500 hover:bg-purple-300 text-white font-bold py-2 px-4 rounded-lg w-2/3 text-sm transition"
+                            onClick={() => { setFormData(vehicle); toggleModalForm(); }}
+                        >
+                            Detalles
+                        </button>
+                        </div>
+                    </div>
                     </div>
                 ))}
             </div>
@@ -170,7 +181,7 @@ const ListCars = () => {
 
             {/* Botón para registrar */}
             <button
-                className="fixed bottom-6 right-6 bg-purple-500 text-white p-4 rounded-full shadow-lg hover:bg-purple-600 transition"
+                className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition"
                 onClick={() => {
                     setFormData({ id: 0, brand: "", model: "", service_number: 0, year: 0, plate: "", color: "", fuel_type: "", client: 0 });
                     toggleModalForm();
@@ -188,6 +199,23 @@ const ListCars = () => {
                 textActionOk={isEdit ? "Actualizar" : "Guardar"}
                 body={
                 <>
+                    <div>
+                        <label className="block text-sm font-medium">Imagen</label>
+                        <div className="w-full h-40 bg-gray-100 flex items-center justify-center border rounded-lg">
+                            {formData.image_url ? (
+                                <img src={formData.image_url} alt="Previsualización" className="h-full object-cover rounded-lg" />
+                            ) : (
+                                <span className="text-gray-500">No hay imagen seleccionada</span>
+                            )}
+                        </div>
+                        <input
+                            type="text"
+                            value={formData.image_url}
+                            onChange={(e) => handleChange("image_url", e.target.value)}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 mt-2"
+                            placeholder="Ingrese la URL de la imagen"
+                        />
+                    </div>
                     <div>
                         <label className="block text-sm font-medium">Marca</label>
                         <input
@@ -256,12 +284,16 @@ const ListCars = () => {
 
                     <div>
                         <label className="block text-sm font-medium">Tipo de combustible</label>
-                        <input
-                            type="text"
+                        <select
                             value={formData.fuel_type}
                             onChange={(e) => handleChange("fuel_type", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400">
+                            <option value="" disabled hidden>Seleccionar</option>
+                            <option value="Gasolina regular">Gasolina regular</option>
+                            <option value="Gasolina premium">Gasolina premium</option>
+                            <option value="Gasolina sin plomo 95">Gasolina sin plomo 95</option>
+                            <option value="Electrico">Electrico</option>
+                        </select>
                         {errors.fuel_type && <p className="text-red-500 text-sm">{errors.fuel_type}</p>}
                     </div>
                     
@@ -281,11 +313,11 @@ const ListCars = () => {
                 textBodyConfirm={`¿Estás seguro de que deseas ${isEdit ? "actualizar la información del" : "registrar al nuevo"} vehiculo?`}
             />
 
-            {/* AlertMessage para eliminar capturista */}
+            {/* AlertMessage para eliminar Vehiculos */}
             {alertMessage && selectedVehicle && (
                 <AlertMessage
                 title="Confirmar Eliminación"
-                body={`¿Estás seguro de que deseas eliminar el ${selectedVehicle.model} ${selectedVehicle.brand}?`}
+                body={`¿Estás seguro de que deseas eliminar ${selectedVehicle.model} ${selectedVehicle.brand}?`}
                 onCancel={() => setAlertMessage(false)}
                 onConfirm={confirmDelete}
                 />

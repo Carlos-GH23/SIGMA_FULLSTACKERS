@@ -9,12 +9,13 @@ import ListCapturistas from "../components/admin/Listcapturist";
 import { isAdmin, isLoggedIn } from "../services/AuthService";
 import { AnimatePresence } from "framer-motion";
 import ListClients from "../components/components/ListClients";
+import ListServices from "../components/components/ListServices";
 
 const AppRouter = () => {
     const location = useLocation();
     const loggedIn = isLoggedIn();
     const admin = isAdmin();
-    
+
     return (
         <AnimatePresence>
             <Routes location={location} key={location.pathname}>
@@ -27,7 +28,7 @@ const AppRouter = () => {
                         <Route path="capturistas" element={<ListCapturistas />} />
                         <Route path="clientes" element={<ListClients />} />
                         <Route path="vehiculos" element={<ListCars />} />
-                        <Route path="servicios" element={<ListCars />} />
+                        <Route path="servicios" element={<ListServices />} />
                     </Route>
                 )}
 
@@ -36,7 +37,7 @@ const AppRouter = () => {
                     <Route path="/capturista" element={<Capturist/>}>
                         <Route path="clientes" element={<ListClients />} />
                         <Route path="vehiculos" element={<ListCars />} />
-                        <Route path="servicios" element={<ListCars />} />
+                        <Route path="servicios" element={<ListServices />} />
                     </Route>
                 )}
 

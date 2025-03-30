@@ -39,6 +39,10 @@ class VehicleForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Tipo de combustible'
             }),
+            'image_url': forms.URLInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'URL de la imagen'
+            })
         }
         
         labels = {
@@ -49,6 +53,7 @@ class VehicleForm(forms.ModelForm):
             'plate': 'Placa',
             'color': 'Color',
             'fuel_type': 'Combustible',
+            'image_url': 'URL de la imagen'
         }
         
         error_messages = {

@@ -269,7 +269,7 @@ const ListClients = () => {
                 textBodyConfirm={`¿Estás seguro de que deseas ${isEdit ? "actualizar la información del" : "registrar al nuevo"} cliente?`}
             />
 
-            {/* AlertMessage para eliminar capturista */}
+            {/* AlertMessage para eliminar clientes */}
             {alertMessage && selectedClient && (
                 <AlertMessage
                 title="Confirmar Eliminación"

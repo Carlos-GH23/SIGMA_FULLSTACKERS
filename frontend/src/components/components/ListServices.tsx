@@ -1,16 +1,16 @@
-/*import { useEffect, useState } from "react";
-import { ServiceModel } from "../../models/ServiceModel";
+import { useEffect, useState } from "react";
 import { CrudService } from "../../services/crudService";
-import { FaPlus, FaSearch } from "react-icons/fa";
-import ModalForm from "../General/ModalForm";
-import AlertMessage from "../General/AlertMessage";
 import ErrorMessage from "../General/ErrorMessage";
 import SuccessMessage from "../General/SuccessMessage";
+import AlertMessage from "../General/AlertMessage";
+import ModalForm from "../General/ModalForm";
+import { FaPlus } from "react-icons/fa";
+import { ServiceModel } from "../../models/ServiceModel";
 
 const ListServices = () => {
     const [loading, setLoading] = useState(true);
     const [services, setServices] = useState<ServiceModel[]>([]);
-    const [formData, setFormData] = useState<ServiceModel>({ id: 0, name: "", description: "", cost: 0, vehicle: 0});
+    const [formData, setFormData] = useState<ServiceModel>({ id: 0, name: "", description: "", date: new Date(), cost: 0, vehicle: 0, image_url: "",});
 
     const [viewModalForm, setViewModalForm] = useState(false);
     const [selectedService, setSelectedService] = useState<ServiceModel | null>(null);
@@ -19,7 +19,7 @@ const ListServices = () => {
     const [successMessage, setSuccessMessage] = useState("");
 
     const crudService = new CrudService<ServiceModel>("http://127.0.0.1:8000/servicio/api/");
-    const [errors, setErrors] = useState<{ name?: string; description?: string; cost?: string; vehicle?: string }>({});
+    const [errors, setErrors] = useState<{ name?: string; description?: string; date?: string; cost?: string; vehicle?: string, image_url?: string }>({});
 
     const fetchServices = async () => {
         try {
@@ -44,18 +44,22 @@ const ListServices = () => {
     };
 
     const handleChange = (key: keyof ServiceModel, value: string | number | Date) => {
+        if (key === "date") {
+            value = value ? new Date(value).toISOString().split("T")[0] : "";
+        }
         setFormData({ ...formData, [key]: value });
         setErrors((prevErrors) => ({ ...prevErrors, [key]: undefined }));
     };
 
     const validateForm = () => {
-        let newErrors: { name?: string; description?: string; cost?: string; vehicle?: string } = {};
+        let newErrors: { name?: string; description?: string; date?: string; cost?: string; vehicle?: string, image_url?: string } = {};
     
         if (!formData.name.trim()) newErrors.name = "El nombre es obligatorio";
         if (!formData.description.trim()) newErrors.description = "La descripción es obligatorio";
+        if (!formData.date) newErrors.date = "La fecha es obligatoria";
         if (formData.cost === undefined || formData.cost === null || formData.cost === 0) newErrors.cost = "El costo es obligatorio";
         if (formData.vehicle === undefined || formData.vehicle === null || formData.vehicle === 0) newErrors.vehicle = "El vehiculo es obligatorio";
-        
+    
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -64,21 +68,22 @@ const ListServices = () => {
         if (!validateForm()) return; 
         
         try {
-            const editNewClient = {
+            const editNewService = {
                 name: formData.name,
-                surname: formData.surname,
-                telephone: formData.telephone,
-                email: formData.email,
-                gender: formData.gender,
+                description: formData.description,
+                date: formData.date,
+                cost: formData.cost,
+                vehicle: formData.vehicle,
+                image_url: formData.image_url,
             };
             if (formData.id === 0) {
-                await crudService.create(editNewClient as ClientModel);
-                setSuccessMessage("Cliente creado exitosamente");
+                await crudService.create(editNewService as ServiceModel);
+                setSuccessMessage("Servicio creado exitosamente");
             } else {
-                await crudService.update(formData.id, editNewClient as ClientModel);
-                setSuccessMessage("Cliente editado exitosamente");
+                await crudService.update(formData.id, editNewService as ServiceModel);
+                setSuccessMessage("Servicio editado exitosamente");
             }
-            fetchClients();
+            fetchServices();
         } catch (error) {
             setErrorMessage(`${error}`);
         } finally {
@@ -86,18 +91,18 @@ const ListServices = () => {
             toggleModalForm();
         }
     };
-    
-    const handleDelete = (client: ClientModel) => {
-        setSelectedClient(client);
+
+    const handleDelete = (vehicle: ServiceModel) => {
+        setSelectedService(vehicle);
         setAlertMessage(true);
     };
 
     const confirmDelete = async () => {
         try {
-            if (selectedClient) {
-                await crudService.delete(selectedClient.id);
+            if (selectedService) {
+                await crudService.delete(selectedService.id);
                 setSuccessMessage("Eliminación exitosamente");
-                fetchClients();
+                fetchServices();
             }
         } catch (error) {
             setErrorMessage(`${error}`);
@@ -117,75 +122,57 @@ const ListServices = () => {
     }
 
     return (
-        <div className="pt-4 w-full ">
+        <div className="h-[20vh]">
             {/* Encabezado */}
             <div className="w-full h-15 rounded-lg bg-purple-500 text-white mb-2 flex justify-center items-center">
-                <h2 className="text-2xl font-bold text-center">Clientes</h2>
+                <h2 className="text-2xl font-bold text-center">Servicios</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+                {services.map((service) => (
+                    <div key={service.id} className="rounded-xl shadow-lg bg-white overflow-hidden min-h-[320px] transition-transform transform hover:scale-105">
+                    {/* Imagen del vehículo */}
+                    <div
+                        className="h-[180px] w-full bg-gray-200 rounded-t-xl"
+                        style={{
+                        backgroundImage: `url('${service.image_url || 'https://i.pinimg.com/736x/a5/bd/bb/a5bdbb181de3af001453c620c8b8dae6.jpg'}')`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center"
+                        }}
+                    ></div>
+
+                    {/* Contenido */}
+                    <div className="p-4">
+                        <h3 className="text-lg font-bold text-purple-700 text-center mb-2">{service.name}</h3>
+                        {/* Botones con diseño 1/3 - 2/3 */}
+                        <div className="mt-4 flex gap-2">
+                        <button 
+                            className="bg-red-500 hover:bg-red-300 text-white font-bold py-2 px-4 rounded-lg w-1/3 text-sm transition"
+                            onClick={() => handleDelete(service)}
+                        >
+                            Eliminar
+                        </button>
+                        <button 
+                            className="bg-purple-500 hover:bg-purple-300 text-white font-bold py-2 px-4 rounded-lg w-2/3 text-sm transition"
+                            onClick={() => { setFormData(service); toggleModalForm(); }}
+                        >
+                            Detalles
+                        </button>
+                        </div>
+                    </div>
+                    </div>
+                ))}
             </div>
 
-            {/* Barra de búsqueda */}
-            <div className="my-2 flex flex-row items-center">
-                <input type="text" id="person" className="w-full mr-4 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400" placeholder="Busca a una persona"/>
-                <button className="w-[60px] p-4 bg-purple-500 text-white p-3 rounded-full shadow-lg hover:bg-purple-600 transition flex justify-center items-center">
-                    <FaSearch className="text-lg" />
-                </button>
-            </div>
-
-            {/* Tabla de usuarios */}
-            <div className="max-h-[calc(88vh-80px)] overflow-y-auto min-h-[200px] bg-white shadow-md rounded-lg p-4">
-                <table className="min-w-full table-auto ">
-                    <thead>
-                        <tr className="bg-gray-100 text-gray-700 text-left">
-                        <th className="px-6 py-3">ID</th>
-                        <th className="px-6 py-3">Nombre</th>
-                        <th className="px-6 py-3">Telefono</th>
-                        <th className="px-6 py-3">Correo</th>
-                        <th className="px-6 py-3">Genero</th>
-                        <th className="px-6 py-3">Fecha Registro</th>
-                        <th className="px-6 py-3">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {clients.map((client) => (
-                        <tr key={client.id} className="border-b hover:bg-gray-50 transition">
-                            <td className="px-6 py-4">{client.id}</td>
-                            <td className="px-6 py-4">{client.name} {client.surname}</td>
-                            <td className="px-6 py-4">{client.telephone}</td>
-                            <td className="px-6 py-4 flex items-center space-x-3">
-                                <span className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 font-semibold">
-                                    {client.email.charAt(0)}
-                                </span>
-                                <span>{client.email}</span>
-                            </td>
-                            <td className="px-6 py-4">{client.gender}</td>
-                            <td className="px-6 py-4">{client.register_date ? new Date(client.register_date).toLocaleDateString() : new Date().toLocaleDateString()}</td>
-                            <td className="px-6 py-4 flex space-x-2">
-                            <button
-                                className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition cursor-pointer"
-                                onClick={() => { setFormData(client); toggleModalForm(); }}>
-                                Editar
-                            </button>
-                            <button
-                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 transition cursor-pointer"
-                                onClick={() => handleDelete(client)}>
-                                Eliminar
-                            </button>
-                            </td>
-                        </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
 
             {/* Botón para registrar */}
             <button
-            className="fixed bottom-6 right-6 bg-purple-500 text-white p-4 rounded-full shadow-lg hover:bg-purple-600 transition"
-            onClick={() => {
-                setFormData({ id: 0, name: "", surname: "", telephone: "", email: "", gender: "" });
-                toggleModalForm();
-            }}
-            >
-            <FaPlus size={24} />
+                className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition"
+                onClick={() => {
+                    setFormData({ id: 0, name: "", description: "", date: new Date(), cost: 0, vehicle: 0 });
+                    toggleModalForm();
+                }}
+                >
+                <FaPlus size={24} />
             </button>
 
             {/* ModalForm */}
@@ -193,10 +180,27 @@ const ListServices = () => {
                 isOpen={viewModalForm} 
                 onClose={toggleModalForm} 
                 onSubmit={handleSubmit}
-                title={isEdit ? "Editar Cliente" : "Registrar Cliente"}
+                title={isEdit ? "Editar Servicio" : "Registrar Servicio"}
                 textActionOk={isEdit ? "Actualizar" : "Guardar"}
                 body={
                 <>
+                    <div>
+                        <label className="block text-sm font-medium">Imagen</label>
+                        <div className="w-full h-40 bg-gray-100 flex items-center justify-center border rounded-lg">
+                            {formData.image_url ? (
+                                <img src={formData.image_url} alt="Previsualización" className="h-full object-cover rounded-lg" />
+                            ) : (
+                                <span className="text-gray-500">No hay imagen seleccionada</span>
+                            )}
+                        </div>
+                        <input
+                            type="text"
+                            value={formData.image_url}
+                            onChange={(e) => handleChange("image_url", e.target.value)}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 mt-2"
+                            placeholder="Ingrese la URL de la imagen"
+                        />
+                    </div>
                     <div>
                         <label className="block text-sm font-medium">Nombre</label>
                         <input
@@ -209,60 +213,59 @@ const ListServices = () => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Apellidos</label>
+                        <label className="block text-sm font-medium">Descripción</label>
                         <input
                             type="text"
-                            value={formData.surname}
-                            onChange={(e) => handleChange("surname", e.target.value)}
+                            value={formData.description}
+                            onChange={(e) => handleChange("description", e.target.value)}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
                         />
-                        {errors.surname && <p className="text-red-500 text-sm">{errors.surname}</p>}
+                        {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Telefono</label>
+                        <label className="block text-sm font-medium">Fecha de registro</label>
                         <input
-                            type="text"
-                            value={formData.telephone}
-                            onChange={(e) => handleChange("telephone", e.target.value)}
+                            type="date"
+                            value={formData.date ? formData.date.toString() : ""} 
+                            onChange={(e) => handleChange("date", e.target.value)}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
                         />
-                        {errors.telephone && <p className="text-red-500 text-sm">{errors.telephone}</p>}
+                        {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
                     </div>
                     
                     <div>
-                        <label className="block text-sm font-medium">Correo</label>
+                        <label className="block text-sm font-medium">Costo</label>
                         <input
-                            type="text"
-                            value={formData.email}
-                            onChange={(e) => handleChange("email", e.target.value)}
+                            type="number"
+                            value={formData.cost}
+                            onChange={(e) => handleChange("cost", e.target.value)}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
                         />
-                        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                        {errors.cost && <p className="text-red-500 text-sm">{errors.cost}</p>}
                     </div>
-                    
+
                     <div>
-                        <label className="block text-sm font-medium">Genero</label>
+                        <label className="block text-sm font-medium">Vehiculo</label>
                         <input
-                            type="text"
-                            value={formData.gender}
-                            onChange={(e) => handleChange("gender", e.target.value)}
+                            type="number"
+                            value={formData.vehicle}
+                            onChange={(e) => handleChange("vehicle", e.target.value)}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
                         />
-                        {errors.gender && <p className="text-red-500 text-sm">{errors.gender}</p>}
+                        {errors.vehicle && <p className="text-red-500 text-sm">{errors.vehicle}</p>}
                     </div>
-                    
                 </>
                 }
                 textConfirm={isEdit ? "Confirmación actualización" : "Confirmación registro"}
-                textBodyConfirm={`¿Estás seguro de que deseas ${isEdit ? "actualizar la información del" : "registrar al nuevo"} cliente?`}
+                textBodyConfirm={`¿Estás seguro de que deseas ${isEdit ? "actualizar la información del" : "registrar al nuevo"} vehiculo?`}
             />
 
-            {/* AlertMessage para eliminar capturista */}
-            {alertMessage && selectedClient && (
+            {/* AlertMessage para eliminar Vehiculos */}
+            {alertMessage && selectedService && (
                 <AlertMessage
                 title="Confirmar Eliminación"
-                body={`¿Estás seguro de que deseas eliminar a ${selectedClient.name} ${selectedClient.surname}?`}
+                body={`¿Estás seguro de que deseas eliminar ${selectedService.name}?`}
                 onCancel={() => setAlertMessage(false)}
                 onConfirm={confirmDelete}
                 />
@@ -275,7 +278,6 @@ const ListServices = () => {
             {successMessage && <SuccessMessage message={successMessage}/>}
         </div>
     );
-    
-}
+};
 
-export default ListClients;*/
+export default ListServices;
