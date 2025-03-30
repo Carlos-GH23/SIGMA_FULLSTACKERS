@@ -1,4 +1,27 @@
+import { useNavigate } from "react-router-dom";
+import { login } from "../../services/AuthService";
+import React, { useState } from "react";
+import ErrorMessage from "../General/ErrorMessage";
+
+
 const Login = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [erroMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
+
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try {
+            const response = await login(username, password);
+            console.log(response);
+            //Regresar a home
+            //navigate("/");
+        } catch (err) {
+            setErrorMessage("Usuario o contraseña incorrectos");
+        }
+    };
+
     return (
         <div className="h-screen flex items-center justify-center bg-gray-100 p-4 bg-linear-to-bl from-purple-500 to-orange-500">
             <div className="grid grid-cols-2 w-[60vw] h-[75vh] bg-white rounded-lg shadow-lg overflow-hidden">
@@ -14,7 +37,7 @@ const Login = () => {
                 <div className="flex flex-col justify-center p-8">
                     <h1 className="text-2xl font-bold text-gray-800 mb-4">Inicio de Sesion</h1>
                     <p className="text-gray-500 mb-6">¡Bienvenido de nuevo!</p>
-                    <form className="space-y-4">
+                    <form className="space-y-4" onSubmit={handleLogin}>
                         <div>
                             <label htmlFor="email" className="block text-gray-700 text-lg mb-1">Correo Electronico</label>
                             <input
@@ -23,6 +46,7 @@ const Login = () => {
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
                                 placeholder="ejemplo123@gmail.com"
                                 required
+                                onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
                         <div>
@@ -32,6 +56,7 @@ const Login = () => {
                                 id="password"
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
                                 required
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
                         <div className="flex justify-between items-center text-sm">
@@ -47,6 +72,8 @@ const Login = () => {
                     </form>
                 </div>
             </div>
+
+            {erroMessage && <ErrorMessage message={erroMessage}/>}
         </div>
     );
 };

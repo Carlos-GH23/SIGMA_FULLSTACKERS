@@ -5,6 +5,7 @@ import Login from "../components/auth/Login";
 import Admin from "../components/admin/admin";
 import ListCars from "../components/components/Listcars";
 import Capturist from "../components/capturist/capturist";
+import ListCapturistas from "../components/admin/Listcapturist";
 
 const AppRouter = () => {
     return (
@@ -16,6 +17,7 @@ const AppRouter = () => {
                 ---/* Rutas del Admin*/---
                 <Route path="/admin" element={<Admin/>}>
                     <Route path="vehiculos" element={<ListCars/>}></Route>
+                    <Route path="capturistas" element={<ListCapturistas/>}></Route>
                 </Route>
 
                 --/* Rutas para mis Capturistas*/--
