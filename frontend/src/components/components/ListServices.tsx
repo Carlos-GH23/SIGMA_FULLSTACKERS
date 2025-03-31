@@ -8,6 +8,7 @@ import { FaPlus } from "react-icons/fa";
 import { ServiceModel } from "../../models/ServiceModel";
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
+import { isAdmin } from "../../services/AuthService";
 
 DataTable.use(DT);
 const ListServices = () => {
@@ -144,16 +145,18 @@ const ListServices = () => {
                     {/* Contenido */}
                     <div className="p-4">
                         <h3 className="text-lg font-bold text-purple-700 text-center mb-2">{service.name}</h3>
-                        {/* Botones con diseño 1/3 - 2/3 */}
                         <div className="mt-4 flex gap-2">
+                        
+                        {isAdmin() && (
+                            <button 
+                                className="bg-red-500 hover:bg-red-300 text-white font-bold py-2 px-4 rounded-lg w-1/3 text-sm transition"
+                                onClick={() => handleDelete(service)}
+                            >
+                                Eliminar
+                            </button>
+                        )}
                         <button 
-                            className="bg-red-500 hover:bg-red-300 text-white font-bold py-2 px-4 rounded-lg w-1/3 text-sm transition"
-                            onClick={() => handleDelete(service)}
-                        >
-                            Eliminar
-                        </button>
-                        <button 
-                            className="bg-purple-500 hover:bg-purple-300 text-white font-bold py-2 px-4 rounded-lg w-2/3 text-sm transition"
+                            className={`bg-purple-500 hover:bg-purple-300 text-white font-bold py-2 px-4 rounded-lg ${isAdmin() ? 'w-2/3' : 'w-full'} text-sm transition`}
                             onClick={() => { setFormData(service); toggleModalForm(); }}
                         >
                             Detalles

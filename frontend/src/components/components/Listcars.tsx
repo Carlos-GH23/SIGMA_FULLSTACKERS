@@ -8,6 +8,7 @@ import ModalForm from "../General/ModalForm";
 import { FaPlus } from "react-icons/fa";
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
+import { isAdmin } from "../../services/AuthService";
 
 DataTable.use(DT);
 const ListCars = () => {
@@ -159,16 +160,17 @@ const ListCars = () => {
                         <p><span className="font-semibold text-gray-800">Combustible:</span> {vehicle.fuel_type}</p>
                         </div>
 
-                        {/* Botones con diseño 1/3 - 2/3 */}
                         <div className="mt-4 flex gap-2">
+                            {isAdmin() && (
+                                <button 
+                                    className="bg-red-500 hover:bg-red-300 text-white font-bold py-2 px-4 rounded-lg w-1/3 text-sm transition"
+                                    onClick={() => handleDelete(vehicle)}
+                                >
+                                    Eliminar
+                                </button>
+                            )} 
                         <button 
-                            className="bg-red-500 hover:bg-red-300 text-white font-bold py-2 px-4 rounded-lg w-1/3 text-sm transition"
-                            onClick={() => handleDelete(vehicle)}
-                        >
-                            Eliminar
-                        </button>
-                        <button 
-                            className="bg-purple-500 hover:bg-purple-300 text-white font-bold py-2 px-4 rounded-lg w-2/3 text-sm transition"
+                            className={`bg-purple-500 hover:bg-purple-300 text-white font-bold py-2 px-4 rounded-lg ${isAdmin() ? 'w-2/3' : 'w-full'} text-sm transition`}
                             onClick={() => { setFormData(vehicle); toggleModalForm(); }}
                         >
                             Detalles
