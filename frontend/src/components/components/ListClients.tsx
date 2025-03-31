@@ -8,6 +8,7 @@ import ErrorMessage from "../General/ErrorMessage";
 import SuccessMessage from "../General/SuccessMessage";
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
+import { isAdmin } from "../../services/AuthService";
 
 
 DataTable.use(DT);
@@ -100,6 +101,11 @@ const ListClients = () => {
         }
     };
 
+    const handleDelete = (client: ClientModel) => {
+        setSelectedClient(client);
+        setAlertMessage(true);
+    };
+
     const confirmDelete = async () => {
         try {
             if (selectedClient) {
@@ -143,6 +149,7 @@ const ListClients = () => {
                             <th className="px-6 py-3">Correo</th>
                             <th className="px-6 py-3">Genero</th>
                             <th className="px-6 py-3">Fecha Registro</th>
+                            {isAdmin() && <th className="px-6 py-3">Acciones</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -159,6 +166,20 @@ const ListClients = () => {
                                 </td>
                                 <td className="px-6 py-4">{client.gender}</td>
                                 <td className="px-6 py-4">{client.register_date ? new Date(client.register_date).toLocaleDateString() : new Date().toLocaleDateString()}</td>
+                                {isAdmin() && (
+                                    <td className="px-6 py-4 flex space-x-2">
+                                        <button
+                                            className="w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-blue-600 transition cursor-pointer"
+                                            onClick={() => { setFormData(client); toggleModalForm(); }}>
+                                            <FaPen size={18} />
+                                        </button>
+                                        <button
+                                            className="w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-700 transition cursor-pointer"
+                                            onClick={() => handleDelete(client)}>
+                                            <FaTrash size={18} />
+                                        </button>
+                                    </td>
+                                )}
                             </tr>
                         ))}
                     </tbody>
