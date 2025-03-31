@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { ClientModel } from "../../models/ClientModel";
 import { CrudService } from "../../services/crudService";
-import { FaPen, FaPlus, FaSearch, FaTrash } from "react-icons/fa";
+import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import ModalForm from "../General/ModalForm";
 import AlertMessage from "../General/AlertMessage";
 import ErrorMessage from "../General/ErrorMessage";
 import SuccessMessage from "../General/SuccessMessage";
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
+
 
 DataTable.use(DT);
 const ListClients = () => {
@@ -99,11 +100,6 @@ const ListClients = () => {
         }
     };
 
-    const handleDelete = (client: ClientModel) => {
-        setSelectedClient(client);
-        setAlertMessage(true);
-    };
-
     const confirmDelete = async () => {
         try {
             if (selectedClient) {
@@ -138,7 +134,7 @@ const ListClients = () => {
 
             {/* Tabla de usuarios */}
             <div className="max-h-[calc(88vh-80px)] overflow-y-auto min-h-[200px] bg-white shadow-md rounded-lg p-4">
-                <DataTable className="min-w-full table-auto ">
+                <DataTable className="min-w-full table-auto display">
                     <thead>
                         <tr className="bg-gray-100 text-gray-700 text-left">
                             <th className="px-6 py-3">ID</th>
@@ -147,7 +143,6 @@ const ListClients = () => {
                             <th className="px-6 py-3">Correo</th>
                             <th className="px-6 py-3">Genero</th>
                             <th className="px-6 py-3">Fecha Registro</th>
-                            <th className="px-6 py-3">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -164,18 +159,6 @@ const ListClients = () => {
                                 </td>
                                 <td className="px-6 py-4">{client.gender}</td>
                                 <td className="px-6 py-4">{client.register_date ? new Date(client.register_date).toLocaleDateString() : new Date().toLocaleDateString()}</td>
-                                <td className="px-6 py-4 flex space-x-2">
-                                    <button
-                                        className="w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-blue-600 transition cursor-pointer"
-                                        onClick={() => { setFormData(client); toggleModalForm(); }}>
-                                        <FaPen size={18} />
-                                    </button>
-                                    <button
-                                        className="w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-700 transition cursor-pointer"
-                                        onClick={() => handleDelete(client)}>
-                                        <FaTrash size={18} />
-                                    </button>
-                                </td>
                             </tr>
                         ))}
                     </tbody>
