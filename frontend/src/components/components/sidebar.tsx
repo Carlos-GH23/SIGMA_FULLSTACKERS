@@ -45,12 +45,6 @@ const Sidebar = ({ user }: { user: string }) => {
               alt="User"
               className="w-10 h-10 rounded-full border-2 "
             />
-            {isOpen && (
-              <div>
-                <h2 className="text-lg font-semibold">Jimmy Shergill</h2>
-                <p className="text-sm text-white">info@jdash.com</p>
-              </div>
-            )}
           </div>
           <ul className="space-y-4">
             <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('inicio')}>
@@ -104,14 +98,7 @@ const Sidebar = ({ user }: { user: string }) => {
               alt="User"
               className="w-10 h-10 rounded-full border-2 "
             />
-            {isOpen && (
-              <div>
-                <h2 className="text-lg font-semibold">Jimmy Shergill</h2>
-                <p className="text-sm text-white">info@jdash.com</p>
-              </div>
-            )}
           </div>
-
           <ul className="space-y-4">
             <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('inicio')}>
               <HiHome className="text-purple-400" size={30} />

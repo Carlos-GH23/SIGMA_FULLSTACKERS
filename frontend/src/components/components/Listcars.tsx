@@ -6,7 +6,10 @@ import SuccessMessage from "../General/SuccessMessage";
 import AlertMessage from "../General/AlertMessage";
 import ModalForm from "../General/ModalForm";
 import { FaPlus } from "react-icons/fa";
+import DataTable from 'datatables.net-react';
+import DT from 'datatables.net-dt';
 
+DataTable.use(DT);
 const ListCars = () => {
     const [loading, setLoading] = useState(true);
     const [vehicles, setVehicles] = useState<VehicleModel[]>([]);

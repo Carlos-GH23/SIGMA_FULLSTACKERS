@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaPen, FaPlus, FaSearch, FaTrash } from "react-icons/fa";
+import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import ModalForm from "../General/ModalForm";
 import AlertMessage from "../General/AlertMessage";
 import { UserModel } from "../../models/UserModel";
@@ -7,8 +7,10 @@ import { CrudService } from "../../services/crudService";
 import ErrorMessage from "../General/ErrorMessage";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import SuccessMessage from "../General/SuccessMessage";
+import DataTable from 'datatables.net-react';
+import DT from 'datatables.net-dt';
 
-
+DataTable.use(DT);
 const ListCapturistas = () => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<UserModel[]>([]);
@@ -135,17 +137,9 @@ const ListCapturistas = () => {
         <h2 className="text-2xl font-bold text-center">Capturistas</h2>
       </div>
 
-      {/* Barra de búsqueda */}
-      <div className="my-2 flex flex-row items-center">
-        <input type="text" id="person" className="w-full mr-4 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400" placeholder="Busca a una persona"/>
-        <button className="w-[60px] p-4 bg-purple-500 text-white p-3 rounded-full shadow-lg hover:bg-purple-600 transition flex justify-center items-center">
-          <FaSearch className="text-lg" />
-        </button>
-      </div>
-
       {/* Tabla de usuarios */}
       <div className="max-h-[calc(88vh-80px)] overflow-y-auto min-h-[200px] bg-white shadow-md rounded-lg p-4">
-        <table className="min-w-full table-auto ">
+        <DataTable className="min-w-full table-auto display ">
           <thead>
             <tr className="bg-gray-100 text-gray-700 text-left">
               <th className="px-6 py-3">ID</th>
@@ -180,7 +174,7 @@ const ListCapturistas = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </DataTable>
       </div>
 
       {/* Botón para registrar capturista */}

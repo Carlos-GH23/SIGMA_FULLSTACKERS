@@ -6,7 +6,10 @@ import AlertMessage from "../General/AlertMessage";
 import ModalForm from "../General/ModalForm";
 import { FaPlus } from "react-icons/fa";
 import { ServiceModel } from "../../models/ServiceModel";
+import DataTable from 'datatables.net-react';
+import DT from 'datatables.net-dt';
 
+DataTable.use(DT);
 const ListServices = () => {
     const [loading, setLoading] = useState(true);
     const [services, setServices] = useState<ServiceModel[]>([]);

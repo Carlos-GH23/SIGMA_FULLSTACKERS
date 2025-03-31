@@ -15,7 +15,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.request.method in ['POST', 'PUT', 'DELETE', 'GET']:
-            return [IsAuthenticated()]
+            return []
         return []
     
     def perform_create(self, serializer):
