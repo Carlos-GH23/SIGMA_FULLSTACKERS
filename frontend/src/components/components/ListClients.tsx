@@ -75,8 +75,6 @@ const ListClients = () => {
     };
 
     const handleSubmit = async () => {
-        if (!validateForm()) return;
-
         try {
             const editNewClient = {
                 name: formData.name,
@@ -202,6 +200,7 @@ const ListClients = () => {
                 isOpen={viewModalForm}
                 onClose={toggleModalForm}
                 onSubmit={handleSubmit}
+                validateForm={validateForm}
                 title={isEdit ? "Editar Cliente" : "Registrar Cliente"}
                 textActionOk={isEdit ? "Actualizar" : "Guardar"}
                 body={

@@ -4,7 +4,7 @@ import { FaCar } from "react-icons/fa";
 import { MdHomeRepairService} from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { logout } from "../../services/AuthService";
+import { logout, getUser } from "../../services/AuthService";
 
 const Sidebar = ({ user }: { user: string }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,6 +45,12 @@ const Sidebar = ({ user }: { user: string }) => {
               alt="User"
               className="w-10 h-10 rounded-full border-2 "
             />
+            {isOpen && (
+              <div className="flex flex-col max-w-xs overflow-hidden">
+                <h2 className="text-lg font-semibold">{getUser()?.name ?? "Sin identidad"}</h2>
+                <p className="text-sm text-white truncate">{getUser()?.email ?? "Sin identidad"}</p>
+              </div>
+            )}
           </div>
           <ul className="space-y-4">
             <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('inicio')}>
@@ -98,6 +104,12 @@ const Sidebar = ({ user }: { user: string }) => {
               alt="User"
               className="w-10 h-10 rounded-full border-2 "
             />
+            {isOpen && (
+              <div>
+                <h2 className="text-lg font-semibold">Jimmy Shergill</h2>
+                <p className="text-sm text-white">info@jdash.com</p>
+              </div>
+            )}
           </div>
           <ul className="space-y-4">
             <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('inicio')}>

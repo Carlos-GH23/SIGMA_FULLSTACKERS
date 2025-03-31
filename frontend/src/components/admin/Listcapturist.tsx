@@ -31,15 +31,7 @@ const ListCapturistas = () => {
     try {
       setLoading(true);
       const usersData = await userService.getAll();
-      const mappedUsers = usersData.map((user: any) => ({
-        id: user.id,
-        email: user.email,
-        token: user.token,
-        password: "",
-        name: user.name,
-        role: user.role,
-      }));
-      setUsers(mappedUsers);
+      setUsers(usersData);
     } catch (error) {
       setErrorMessage("Hubo un problema al cargar los usuarios. Por favor, inténtalo de nuevo más tarde.");
     } finally {
@@ -64,36 +56,25 @@ const ListCapturistas = () => {
 
   const validateForm = () => {
     let newErrors: { name?: string; email?: string; password?: string } = {};
-
     if (!formData.name.trim()) newErrors.name = "El nombre es obligatorio";
     if (!formData.email.trim()) newErrors.email = "El correo es obligatorio";
-    if (!formData.password.trim()) newErrors.password = "La contraseña es obligatoria";
-
+    if (!formData.password || !formData.password.trim()) newErrors.password = "La contraseña es obligatoria";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
   
   const handleSubmit = async () => {
-    if (!validateForm()) return; 
-    
     try {
-      const editNewUser = {
-        email: formData.email,
-        password: formData.password,
-        name: formData.name,
-        role_id: 2
-      };
+      formData.role_id = 2;
       if (formData.id === 0) {
-        await userService.create(editNewUser as UserModel);
+        await userService.create(formData);
         setSuccessMessage("Capturista creado exitosamente");
       } else {
-        await userService.update(formData.id, editNewUser as UserModel);
+        await userService.update(formData.id, formData);
         setSuccessMessage("Capturista editado exitosamente");
       }
       fetchUsers();
     } catch (error) {
-      console.error("ERROR XD: " + error);
-
       setErrorMessage(`${error}`);
     } finally {
       setAlertMessage(false);
@@ -139,7 +120,7 @@ const ListCapturistas = () => {
 
       {/* Tabla de usuarios */}
       <div className="max-h-[calc(88vh-80px)] overflow-y-auto min-h-[200px] bg-white shadow-md rounded-lg p-4">
-        <DataTable className="min-w-full table-auto display ">
+        <DataTable className="min-w-full table-auto display">
           <thead>
             <tr className="bg-gray-100 text-gray-700 text-left">
               <th className="px-6 py-3">ID</th>
@@ -152,12 +133,15 @@ const ListCapturistas = () => {
             {users.map((user) => (
               <tr key={user.id} className="border-b hover:bg-gray-50 transition">
                 <td className="px-6 py-4">{user.id}</td>
-                <td className="px-6 py-4 flex items-center space-x-3">
+                <td className="px-6 py-4">
+                  <span>{user.email}</span>
+                </td>
+                {/*<td className="px-6 py-4 flex items-center space-x-3">
                   <span className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 font-semibold">
                     {user.email.charAt(0)}
                   </span>
                   <span>{user.email}</span>
-                </td>
+                </td>*/}
                 <td className="px-6 py-4">{user.name}</td>
                 <td className="px-6 py-4 flex space-x-3">
                   <button
@@ -193,6 +177,7 @@ const ListCapturistas = () => {
         isOpen={viewModalForm} 
         onClose={toggleModalForm} 
         onSubmit={handleSubmit}
+        validateForm={validateForm}
         title={isEdit ? "Editar Capturista" : "Registrar Capturista"}
         textActionOk={isEdit ? "Actualizar" : "Guardar"}
         body={

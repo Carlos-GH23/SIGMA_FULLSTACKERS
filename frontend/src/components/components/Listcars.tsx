@@ -71,8 +71,6 @@ const ListCars = () => {
     };
 
     const handleSubmit = async () => {
-        if (!validateForm()) return; 
-        
         try {
             const editNewVehicle = {
                 brand: formData.brand,
@@ -198,6 +196,7 @@ const ListCars = () => {
                 isOpen={viewModalForm} 
                 onClose={toggleModalForm} 
                 onSubmit={handleSubmit}
+                validateForm={validateForm}
                 title={isEdit ? "Editar Vehiculo" : "Registrar Vehiculo"}
                 textActionOk={isEdit ? "Actualizar" : "Guardar"}
                 body={

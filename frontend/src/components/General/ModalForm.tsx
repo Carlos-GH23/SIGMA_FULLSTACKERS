@@ -4,18 +4,19 @@ import { GoAlert } from "react-icons/go";
 import { IoClose } from "react-icons/io5";
 
 interface ModalProps {
-    isOpen: boolean; // Indica si el modal está abierto o cerrado.
-    onClose: () => void; // Función para cerrar el modal.
-    onSubmit: () => void; // Función que se ejecuta al enviar el formulario.
-    body: ReactNode; // Contenido personalizado dentro del formulario.
-    title?: string; // Título opcional para el modal.
-    textActionOk: string; // Título opcional para el modal
-    textActionCancel?: string; // Título opcional para el modal
-    textConfirm: string; // Título para la confirmacion de modal
-    textBodyConfirm: string; // Contenido para la confirmacion de modal
+    isOpen: boolean;
+    onClose: () => void;
+    onSubmit: () => void;
+    body: ReactNode;
+    title?: string;
+    textActionOk: string;
+    textActionCancel?: string;
+    textConfirm: string;
+    textBodyConfirm: string;
+    validateForm: () => boolean
 }
 
-const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", textActionOk, textActionCancel = "Cancelar", textConfirm, textBodyConfirm}: ModalProps) => {
+const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", textActionOk, textActionCancel = "Cancelar", textConfirm, textBodyConfirm, validateForm}: ModalProps) => {
     const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
@@ -53,7 +54,10 @@ const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", text
                             {textActionCancel}
                         </button>
                         <button 
-                            onClick={() => setShowAlert(true)} 
+                            onClick={() => {
+                                if (!validateForm()) return;
+                                setShowAlert(true);
+                            }} 
                             className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg col-span-2">
                             {textActionOk}
                         </button>

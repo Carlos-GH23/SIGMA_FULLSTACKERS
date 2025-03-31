@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { login } from "../../services/AuthService";
 import React, { useState } from "react";
 import ErrorMessage from "../General/ErrorMessage";
@@ -16,7 +15,8 @@ const Login = () => {
         try {
             await login(username, password);
         } catch (err) {
-            setErrorMessage("Usuario o contraseña incorrectos");
+            setErrorMessage("");
+            setTimeout(() => setErrorMessage("Usuario o contraseña incorrectos"), 10);
         }
     };
 

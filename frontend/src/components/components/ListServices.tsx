@@ -68,8 +68,6 @@ const ListServices = () => {
     };
 
     const handleSubmit = async () => {
-        if (!validateForm()) return; 
-        
         try {
             const editNewService = {
                 name: formData.name,
@@ -183,6 +181,7 @@ const ListServices = () => {
                 isOpen={viewModalForm} 
                 onClose={toggleModalForm} 
                 onSubmit={handleSubmit}
+                validateForm={validateForm}
                 title={isEdit ? "Editar Servicio" : "Registrar Servicio"}
                 textActionOk={isEdit ? "Actualizar" : "Guardar"}
                 body={
