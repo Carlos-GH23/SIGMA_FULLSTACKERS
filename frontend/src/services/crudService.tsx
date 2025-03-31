@@ -20,8 +20,7 @@ export class CrudService<T> {
     private async refreshToken() {
         try {
             const refresh = localStorage.getItem("refreshToken");
-            if (!refresh) throw new Error("No refresh token available");
-
+            if (!refresh) throw new Error("No se pudo actualizar el token");
             const response = await axios.post("http://127.0.0.1:8000/users/token/refresh/", { refresh });
             localStorage.setItem("accessToken", response.data.access);
             return response.data.access;
@@ -38,7 +37,8 @@ export class CrudService<T> {
             if (error.response?.status === 401) { // Token expirado
                 const newAccessToken = await this.refreshToken();
                 if (newAccessToken) {
-                    return await request(); // Reintenta la petición con el nuevo token
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    return await request();
                 }
             }
             throw error;
