@@ -15,9 +15,10 @@ interface ModalProps {
     textConfirm: string;
     textBodyConfirm: string;
     validateForm: () => boolean
+    isSave?: boolean;
 }
 
-const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", textActionOk, textActionCancel = "Cancelar", textConfirm, textBodyConfirm, validateForm}: ModalProps) => {
+const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", textActionOk, textActionCancel = "Cancelar", textConfirm, textBodyConfirm, validateForm, isSave = false}: ModalProps) => {
     const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
@@ -48,13 +49,13 @@ const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", text
 
                     <div className="mt-4 grid grid-cols-1 gap-3">{body}</div>
 
-                    <div className={`grid ${isAdmin() ? 'grid-cols-3' : 'grid-cols-1'} gap-3 mt-5`}>
+                    <div className={`grid ${(isAdmin() || isSave) ? 'grid-cols-3' : 'grid-cols-1'} gap-3 mt-5`}>
                         <button 
                             onClick={onClose} 
                             className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg col-span-1">
                             {textActionCancel}
                         </button>
-                        {isAdmin() && (
+                        {(isAdmin() || isSave) && (
                             <button 
                                 onClick={() => {
                                     if (!validateForm()) return;
@@ -80,6 +81,7 @@ const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", text
                         setShowAlert(false);
                         onSubmit();
                     }}
+                    isDelete={false}
                     icon={<GoAlert className="text-yellow-500 text-8xl mb-4" />}
                 />
             )}

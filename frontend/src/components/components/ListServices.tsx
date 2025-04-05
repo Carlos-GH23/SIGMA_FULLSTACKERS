@@ -126,8 +126,9 @@ const ListServices = () => {
     return (
         <div className="h-[20vh]">
             {/* Encabezado */}
-            <div className="w-full h-15 rounded-lg bg-purple-500 text-white mb-2 flex justify-center items-center">
-                <h2 className="text-2xl font-bold text-center">Servicios</h2>
+            <div className="text-center my-4">
+                <h2 className="text-3xl font-extrabold text-gray-800 font-serif">Servicios</h2>
+                <div className="w-full mx-auto mt-2 border-b-4 border-purple-800"></div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
                 {services.map((service) => (

@@ -112,15 +112,25 @@ const ListCapturistas = () => {
   }
 
   return (
-    <div className="pt-4 w-full ">
+    <div className="pt-4 w-full">
       {/* Encabezado */}
-      <div className="w-full h-15 rounded-lg bg-purple-500 text-white mb-2 flex justify-center items-center">
-        <h2 className="text-2xl font-bold text-center">Capturistas</h2>
+      
+      <div className="w-full h-16 rounded-xl bg-gray-900 text-white mb-4 flex justify-center items-center shadow-lg">
+        <h2 className="text-2xl font-bold text-center font-serif">Capturistas</h2>
       </div>
 
       {/* Tabla de usuarios */}
-      <div className="max-h-[calc(88vh-80px)] overflow-y-auto min-h-[200px] bg-white shadow-md rounded-lg p-4">
-        <DataTable className="min-w-full table-auto display">
+      <div className="overflow-y-auto min-h-[200px] bg-white shadow-md rounded-lg p-4">
+        <DataTable className="min-w-full table-auto display"
+          options={{
+            language: {
+              search: "Buscar:",
+              lengthMenu: "Mostrar _MENU_ registros por página",
+              infoEmpty: "No hay registros disponibles",
+              info: "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+            },
+          }}
+        >
           <thead>
             <tr className="bg-gray-100 text-gray-700 text-left">
               <th className="px-6 py-3">ID</th>

@@ -9,6 +9,7 @@ import { FaPlus } from "react-icons/fa";
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
 import { isAdmin } from "../../services/AuthService";
+import { ClientModel } from "../../models/ClientModel";
 
 DataTable.use(DT);
 const ListCars = () => {
@@ -23,7 +24,10 @@ const ListCars = () => {
     const [successMessage, setSuccessMessage] = useState("");
 
     const crudService = new CrudService<VehicleModel>("http://127.0.0.1:8000/vehiculo/api/");
+    const clientService = new CrudService<ClientModel>("http://127.0.0.1:8000/cliente/api/");
     const [errors, setErrors] = useState<{ brand?: string; model?: string; service_number?: string; year?: string; plate?: string, color?: string, fuel_type?: string, client?: string, image_url?: string }>({});
+
+    const [clients, setClients] = useState<ClientModel[]>([]);
 
     const fetchVehicles = async () => {
         try {
@@ -37,8 +41,18 @@ const ListCars = () => {
         }
     };
 
+    const fetchClients = async () => {
+        try {
+            const clientsData = await clientService.getAll();
+            setClients(clientsData);
+        } catch (error) {
+            console.error("Hubo un problema al cargar los clientes. Por favor, inténtalo de nuevo más tarde.");
+        }
+    };
+
     useEffect(() => {
         fetchVehicles();
+        fetchClients();
     }, []);
 
     //Funciones
@@ -132,8 +146,9 @@ const ListCars = () => {
     return (
         <div className="h-[20vh]">
             {/* Encabezado */}
-            <div className="w-full h-15 rounded-lg bg-purple-500 text-white mb-2 flex justify-center items-center">
-                <h2 className="text-2xl font-bold text-center">Vehiculos</h2>
+            <div className="text-center my-4">
+                <h2 className="text-3xl font-extrabold text-gray-800 font-serif">Vehículos</h2>
+                <div className="w-full mx-auto mt-2 border-b-4 border-purple-800"></div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
                 {vehicles.map((vehicle) => (
@@ -150,7 +165,7 @@ const ListCars = () => {
 
                     {/* Contenido */}
                     <div className="p-4">
-                        <h3 className="text-lg font-bold text-purple-700 text-center mb-2">{vehicle.brand} {vehicle.model}</h3>
+                        <h3 className="text-lg font-bold text-gray-900 text-center mb-2">{vehicle.brand} {vehicle.model}</h3>
 
                         {/* Contenedor de detalles en dos columnas */}
                         <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
@@ -170,7 +185,7 @@ const ListCars = () => {
                                 </button>
                             )} 
                         <button 
-                            className={`bg-purple-500 hover:bg-purple-300 text-white font-bold py-2 px-4 rounded-lg ${isAdmin() ? 'w-2/3' : 'w-full'} text-sm transition`}
+                            className={`bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg ${isAdmin() ? 'w-2/3' : 'w-full'} text-sm transition`}
                             onClick={() => { setFormData(vehicle); toggleModalForm(); }}
                         >
                             Detalles
@@ -186,7 +201,7 @@ const ListCars = () => {
             <button
                 className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition"
                 onClick={() => {
-                    setFormData({ id: 0, brand: "", model: "", service_number: 0, year: 0, plate: "", color: "", fuel_type: "", client: 0 });
+                    setFormData({ id: 0, brand: "", model: "", service_number: 0, year: 2025, plate: "", color: "", fuel_type: "", client: 0 });
                     toggleModalForm();
                 }}
                 >
@@ -201,6 +216,7 @@ const ListCars = () => {
                 validateForm={validateForm}
                 title={isEdit ? "Editar Vehiculo" : "Registrar Vehiculo"}
                 textActionOk={isEdit ? "Actualizar" : "Guardar"}
+                isSave={!isEdit}
                 body={
                 <>
                     <div>
@@ -220,95 +236,105 @@ const ListCars = () => {
                             placeholder="Ingrese la URL de la imagen"
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium">Marca</label>
-                        <input
-                            type="text"
-                            value={formData.brand}
-                            onChange={(e) => handleChange("brand", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.brand && <p className="text-red-500 text-sm">{errors.brand}</p>}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label className="block text-sm font-medium">Marca</label>
+                            <input
+                                type="text"
+                                value={formData.brand}
+                                onChange={(e) => handleChange("brand", e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                            />
+                            {errors.brand && <p className="text-red-500 text-sm">{errors.brand}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium">Modelo</label>
+                            <input
+                                type="text"
+                                value={formData.model}
+                                onChange={(e) => handleChange("model", e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                            />
+                            {errors.model && <p className="text-red-500 text-sm">{errors.model}</p>}
+                        </div>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium">Modelo</label>
-                        <input
-                            type="text"
-                            value={formData.model}
-                            onChange={(e) => handleChange("model", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.model && <p className="text-red-500 text-sm">{errors.model}</p>}
+                    <div className="grid grid-cols-4 gap-4 mt-4">
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium">Placas</label>
+                            <input
+                                type="text"
+                                value={formData.plate}
+                                onChange={(e) => handleChange("plate", e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                            />
+                            {errors.plate && <p className="text-red-500 text-sm">{errors.plate}</p>}
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Año</label>
+                            <input
+                                type="number"
+                                value={formData.year}
+                                onChange={(e) => handleChange("year", e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                            />
+                            {errors.year && <p className="text-red-500 text-sm">{errors.year}</p>}
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Número de servicio</label>
+                            <input
+                                type="number"
+                                value={formData.service_number}
+                                onChange={(e) => handleChange("service_number", e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                            />
+                            {errors.service_number && <p className="text-red-500 text-sm">{errors.service_number}</p>}
+                        </div>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium">Número de servicio</label>
-                        <input
-                            type="number"
-                            value={formData.service_number}
-                            onChange={(e) => handleChange("service_number", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.service_number && <p className="text-red-500 text-sm">{errors.service_number}</p>}
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium">Año</label>
-                        <input
-                            type="number"
-                            value={formData.year}
-                            onChange={(e) => handleChange("year", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.year && <p className="text-red-500 text-sm">{errors.year}</p>}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium">Placas</label>
-                        <input
-                            type="text"
-                            value={formData.plate}
-                            onChange={(e) => handleChange("plate", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.plate && <p className="text-red-500 text-sm">{errors.plate}</p>}
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium">Color</label>
-                        <input
-                            type="text"
-                            value={formData.color}
-                            onChange={(e) => handleChange("color", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.color && <p className="text-red-500 text-sm">{errors.color}</p>}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium">Tipo de combustible</label>
-                        <select
-                            value={formData.fuel_type}
-                            onChange={(e) => handleChange("fuel_type", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400">
-                            <option value="" disabled hidden>Seleccionar</option>
-                            <option value="Gasolina regular">Gasolina regular</option>
-                            <option value="Gasolina premium">Gasolina premium</option>
-                            <option value="Gasolina sin plomo 95">Gasolina sin plomo 95</option>
-                            <option value="Electrico">Electrico</option>
-                        </select>
-                        {errors.fuel_type && <p className="text-red-500 text-sm">{errors.fuel_type}</p>}
+                    <div className="grid grid-cols-5 gap-4 mt-4">
+                        <div className="col-span-3">
+                            <label className="block text-sm font-medium">Tipo de combustible</label>
+                            <select
+                                value={formData.fuel_type}
+                                onChange={(e) => handleChange("fuel_type", e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400">
+                                <option value="" disabled hidden>Seleccionar</option>
+                                <option value="Gasolina regular">Gasolina regular</option>
+                                <option value="Gasolina premium">Gasolina premium</option>
+                                <option value="Gasolina sin plomo 95">Gasolina sin plomo 95</option>
+                                <option value="Electrico">Electrico</option>
+                            </select>
+                            {errors.fuel_type && <p className="text-red-500 text-sm">{errors.fuel_type}</p>}
+                        </div>
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium">Color</label>
+                            <input
+                                type="text"
+                                value={formData.color}
+                                onChange={(e) => handleChange("color", e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                            />
+                            {errors.color && <p className="text-red-500 text-sm">{errors.color}</p>}
+                        </div>
                     </div>
                     
                     <div>
                         <label className="block text-sm font-medium">Cliente</label>
-                        <input
-                            type="number"
+                        <select
                             value={formData.client}
-                            onChange={(e) => handleChange("client", e.target.value)}
+                            onChange={(e) => handleChange("client", parseInt(e.target.value))}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
+                        >
+                            <option value="0" disabled hidden>Seleccionar cliente</option>
+                            {clients.map(client => (
+                                <option key={client.id} value={client.id}>
+                                    {client.name} {client.surname} 
+                                </option>
+                            ))}
+                        </select>
                         {errors.client && <p className="text-red-500 text-sm">{errors.client}</p>}
                     </div>
                 </>
@@ -324,6 +350,7 @@ const ListCars = () => {
                 body={`¿Estás seguro de que deseas eliminar ${selectedVehicle.model} ${selectedVehicle.brand}?`}
                 onCancel={() => setAlertMessage(false)}
                 onConfirm={confirmDelete}
+                isDelete={true}
                 />
             )}
 

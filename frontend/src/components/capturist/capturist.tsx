@@ -7,11 +7,11 @@ const Capturist = () => {
             <div className="h-full">
                 <Sidebar user="capturista" />
             </div>
-            <div className="flex-1  p-4 overflow-auto">
+            <div className="flex-1 p-4 overflow-auto  bg-gray-400">
                 <Outlet />
             </div>
         </div>
     );
-  };
-  
+};
+
 export default Capturist;

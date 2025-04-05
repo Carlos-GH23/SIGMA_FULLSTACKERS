@@ -2,13 +2,15 @@ import { useState } from "react";
 import { HiHome, HiListBullet, HiUserGroup, HiMiniUsers, HiMiniCalendarDays, HiArrowLeftOnRectangle } from "react-icons/hi2";
 import { FaCar } from "react-icons/fa";
 import { MdHomeRepairService} from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import { logout, getUser } from "../../services/AuthService";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 const Sidebar = ({ user }: { user: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     Swal.fire({
@@ -27,16 +29,34 @@ const Sidebar = ({ user }: { user: string }) => {
     });
   };
 
+  const menuAdmin = [
+    { name: "Inicio", path: "inicio", icon: <HiHome size={30} /> },
+    { name: "Capturistas", path: "capturistas", icon: <HiUserGroup size={30} /> },
+    { name: "Clientes", path: "clientes", icon: <HiMiniUsers size={30} /> },
+    { name: "Vehiculos", path: "vehiculos", icon: <FaCar size={30} /> },
+    { name: "Servicios", path: "servicios", icon: <MdHomeRepairService size={30} /> },
+    { name: "Citas", path: "citas", icon: <HiMiniCalendarDays size={30} /> },
+  ];
+
+
+  const menuCapturist = [
+    { name: "Inicio", path: "inicio", icon: <HiHome size={30} /> },
+    { name: "Clientes", path: "clientes", icon: <HiMiniUsers size={30} /> },
+    { name: "Vehiculos", path: "vehiculos", icon: <FaCar size={30} /> },
+    { name: "Servicios", path: "servicios", icon: <MdHomeRepairService size={30} /> },
+    { name: "Citas", path: "citas", icon: <HiMiniCalendarDays size={30} /> },
+  ];
+
+
   if (user === 'admin')
     return (
       <div className="flex">
-        <div className={`bg-black text-white shadow-lg h-screen p-5 pt-8 ${isOpen ? "w-64" : "w-20"} duration-300 relative`}>
-          {/* Botón de expandir/contraer */}
+        <div className={`bg-gray-900 text-white shadow-lg h-screen p-5 pt-8 ${isOpen ? "w-64" : "w-21"} duration-300 relative`}>
           <button
-            className="absolute top-6 right-[-15px] bg-purple-600 text-white rounded-full p-1"
+            className="absolute top-6 right-[-15px] bg-purple-800 text-white rounded-full p-1"
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? <HiListBullet size={25} /> : <HiListBullet size={25} />}
+            {isOpen ? <HiChevronLeft size={25} /> : <HiChevronRight size={25} />}
           </button>
 
           <div className="flex items-center gap-x-4 mb-6">
@@ -52,33 +72,28 @@ const Sidebar = ({ user }: { user: string }) => {
               </div>
             )}
           </div>
+          
           <ul className="space-y-4">
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('inicio')}>
-              <HiHome className="text-purple-400" size={30}/>
-              {isOpen && <span>Inicio</span>}
-            </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('capturistas')}>
-              <HiUserGroup className="text-purple-400" size={30}/>
-              {isOpen && <span>Capturistas</span>}
-            </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer relative" onClick={() => navigate('clientes')}>
-              <HiMiniUsers className="text-purple-400" size={30} />
-              {isOpen && <span>Clientes</span>}
-            </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer"  onClick={() => navigate('vehiculos')}>
-              <FaCar className="text-purple-400" size={30} />
-              {isOpen && <span>Vehiculos</span>}
-            </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer"  onClick={() => navigate('servicios')}>
-              <MdHomeRepairService className="text-purple-400" size={30} />
-              {isOpen && <span>Servicios</span>}
-            </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => {}}>
-              <HiMiniCalendarDays className="text-purple-400" size={30} />
-              {isOpen && <span>Citas</span>}
-            </li>
+            {menuAdmin.map((item) => (
+              <li 
+                key={item.path} 
+                className={`flex items-center gap-x-3 p-2 rounded-lg cursor-pointer transition duration-300 w-full 
+                  ${location.pathname.includes(item.path) ? "bg-purple-900 text-white" : "hover:bg-white hover:text-black"}`} 
+                onClick={() => navigate(item.path)}
+              >
+                <span className={`${location.pathname.includes(item.path) ? "text-white" : "text-purple-500"}`}>
+                  {item.icon}
+                </span>
+                {isOpen && <span>{item.name}</span>}
+              </li>
+            ))}
           </ul>
-          <div className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-400 hover:bg-white cursor-pointer" onClick={handleLogout}>
+
+
+          <div 
+            className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-500 hover:bg-white hover:text-black cursor-pointer" 
+            onClick={handleLogout}
+          >
             <HiArrowLeftOnRectangle size={30} />
             {isOpen && <span>Cerrar Sesion</span>}
           </div>
@@ -88,14 +103,12 @@ const Sidebar = ({ user }: { user: string }) => {
   if (user === 'capturista') {
     return (
       <div className="flex">
-
-        <div className={`bg-black text-white shadow-lg h-screen p-5 pt-8 ${isOpen ? "w-64" : "w-20"} duration-300 relative`}>
-
+        <div className={`bg-gray-900 text-white shadow-lg h-screen p-5 pt-8 ${isOpen ? "w-64" : "w-21"} duration-300 relative`}>
           <button
-            className="absolute top-6 right-[-15px] bg-purple-600 text-white rounded-full p-1"
+            className="absolute top-6 right-[-15px] bg-purple-800 text-white rounded-full p-1"
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? <HiListBullet size={25} /> : <HiListBullet size={25} />}
+            {isOpen ? <HiChevronLeft size={25} /> : <HiChevronRight size={25} />}
           </button>
 
           <div className="flex items-center gap-x-4 mb-6">
@@ -105,35 +118,34 @@ const Sidebar = ({ user }: { user: string }) => {
               className="w-10 h-10 rounded-full border-2 "
             />
             {isOpen && (
-              <div>
-                <h2 className="text-lg font-semibold">Jimmy Shergill</h2>
-                <p className="text-sm text-white">info@jdash.com</p>
+              <div className="flex flex-col max-w-xs overflow-hidden">
+                <h2 className="text-lg font-semibold">{getUser()?.name ?? "Sin identidad"}</h2>
+                <p className="text-sm text-white truncate">{getUser()?.email ?? "Sin identidad"}</p>
               </div>
             )}
           </div>
+          
           <ul className="space-y-4">
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('inicio')}>
-              <HiHome className="text-purple-400" size={30} />
-              {isOpen && <span>Inicio</span>}
-            </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer relative" onClick={() => navigate('clientes')}>
-              <HiMiniUsers className="text-purple-400" size={30} />
-              {isOpen && <span>Clientes</span>}
-            </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => navigate('vehiculos')}>
-              <FaCar className="text-purple-400" size={30} />
-              {isOpen && <span>Vehiculos</span>}
-            </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer"  onClick={() => navigate('servicios')}>
-              <MdHomeRepairService className="text-purple-400" size={30} />
-              {isOpen && <span>Servicios</span>}
-            </li>
-            <li className="flex items-center gap-x-3 p-2 hover:bg-white rounded-lg cursor-pointer" onClick={() => {}}>
-              <HiMiniCalendarDays className="text-purple-400" size={30} />
-              {isOpen && <span>Citas</span>}
-            </li>
+            {menuCapturist.map((item) => (
+              <li 
+                key={item.path} 
+                className={`flex items-center gap-x-3 p-2 rounded-lg cursor-pointer transition duration-300 w-full 
+                  ${location.pathname.includes(item.path) ? "bg-purple-900 text-white" : "hover:bg-white hover:text-black"}`} 
+                onClick={() => navigate(item.path)}
+              >
+                <span className={`${location.pathname.includes(item.path) ? "text-white" : "text-purple-500"}`}>
+                  {item.icon}
+                </span>
+                {isOpen && <span>{item.name}</span>}
+              </li>
+            ))}
           </ul>
-          <div className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-400 hover:bg-white cursor-pointer" onClick={handleLogout}>
+
+
+          <div 
+            className="absolute bottom-8 left-5 flex items-center gap-x-3 p-2 rounded-lg text-purple-500 hover:bg-white hover:text-black cursor-pointer" 
+            onClick={handleLogout}
+          >
             <HiArrowLeftOnRectangle size={30} />
             {isOpen && <span>Cerrar Sesion</span>}
           </div>

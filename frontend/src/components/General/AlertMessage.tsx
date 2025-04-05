@@ -9,9 +9,10 @@ interface AlertMessageProps {
     onCancel?: () => void;
     onConfirm?: () => void;
     colorConfirm?: string;
+    isDelete?: boolean;
 }
 
-const AlertMessage: React.FC<AlertMessageProps> = ({ title, colorTitle = "#FF3333", body, icon, onCancel, onConfirm}) => {
+const AlertMessage: React.FC<AlertMessageProps> = ({ title, colorTitle = "#FF3333", body, icon, onCancel, onConfirm, isDelete = false}) => {
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
@@ -37,20 +38,37 @@ const AlertMessage: React.FC<AlertMessageProps> = ({ title, colorTitle = "#FF333
                 </div>
 
                 {/* Botones */}
-                <div className="flex justify-around p-4 ">
-                    <button 
-                        onClick={() => { setVisible(false); onCancel && onCancel(); }} 
-                        className="bg-red-500 hover:bg-red-300 text-white font-bold py-3 px-4 rounded-lg w-full text-lg shadow-md cursor-pointer m-2"
-                    >
-                        Cancelar
-                    </button>
-                    <button 
-                        onClick={() => { setVisible(false); onConfirm && onConfirm(); }} 
-                        className="bg-green-600 hover:bg-green-300 text-white font-bold py-3 px-4 rounded-lg w-full text-lg shadow-md cursor-pointer m-2"
-                    >
-                        Continuar
-                    </button>
-                </div>
+                {isDelete ? (
+                    <div className="flex justify-around p-4 ">
+                        <button 
+                            onClick={() => { setVisible(false); onConfirm && onConfirm(); }} 
+                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg w-full text-lg shadow-md cursor-pointer m-2"
+                        >
+                            Continuar
+                        </button>
+                        <button 
+                            onClick={() => { setVisible(false); onCancel && onCancel(); }} 
+                            className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg w-full text-lg shadow-md cursor-pointer m-2"
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                ) : (
+                    <div className="flex justify-around p-4 ">
+                        <button 
+                            onClick={() => { setVisible(false); onCancel && onCancel(); }} 
+                            className="bg-red-500 hover:bg-red-300 text-white font-bold py-3 px-4 rounded-lg w-full text-lg shadow-md cursor-pointer m-2"
+                        >
+                            Cancelar
+                        </button>
+                        <button 
+                            onClick={() => { setVisible(false); onConfirm && onConfirm(); }} 
+                            className="bg-green-600 hover:bg-green-300 text-white font-bold py-3 px-4 rounded-lg w-full text-lg shadow-md cursor-pointer m-2"
+                        >
+                            Continuar
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
