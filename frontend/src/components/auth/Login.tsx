@@ -33,8 +33,8 @@ const Login = () => {
                 >
                 </div>
                 <div className="flex flex-col justify-center p-8">
-                    <h1 className="text-2xl font-bold text-gray-800 mb-4">Inicio de Sesion</h1>
-                    <p className="text-gray-500 mb-6">¡Bienvenido de nuevo!</p>
+                    <h1 className="text-2xl font-bold text-gray-800 mb-1">Inicio de Sesion</h1>
+                    <p className="text-gray-500 mb-2">¡Bienvenido de nuevo!</p>
                     <form className="space-y-4" onSubmit={handleLogin}>
                         <div>
                             <label htmlFor="email" className="block text-gray-700 text-lg mb-1">Correo Electronico</label>
@@ -64,16 +64,12 @@ const Login = () => {
                                 {showPassword ? <FaEye size={20} /> : <FaEyeSlash size={20} />}
                             </button>
                         </div>
-                        <div className="flex justify-between items-center text-sm">
-                            <div>
-                                <input type="checkbox" id="remember" className="mr-2" />
-                                <label htmlFor="remember" className="text-gray-600">¿Recordar contraseña?</label>
-                            </div>
-                            <a href="#" className="text-purple-600 hover:underline">Olvide mi contraseña</a>
-                        </div>
                         <button className="bg-purple-500 hover:bg-purple-300 text-white font-bold py-3 px-4 rounded-lg w-full text-lg">
                             Iniciar Sesion
                         </button>
+                        <div className="flex justify-center text-sm">
+                            <a href="#" className="text-purple-600 hover:underline">Olvide mi contraseña</a>
+                        </div>
                     </form>
                 </div>
             </div>

@@ -284,6 +284,7 @@ const ListClients = () => {
                     body={`¿Estás seguro de que deseas eliminar a ${selectedClient.name} ${selectedClient.surname}?`}
                     onCancel={() => setAlertMessage(false)}
                     onConfirm={confirmDelete}
+                    isDelete={true}
                 />
             )}
 

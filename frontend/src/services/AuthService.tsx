@@ -9,7 +9,14 @@ export const login = async (email: string, password: string) => {
 
     if(response.data.access){
         const user: UserModel = response.data.user;
-        localStorage.setItem("user", JSON.stringify(user));
+        const formattedUser: UserModel = {
+            ...user,
+            role: {
+                id: response.data.user.role == "admin" ? 1 : 2, 
+                name: response.data.user.role
+            }
+        };
+        localStorage.setItem("user", JSON.stringify(formattedUser));
         localStorage.setItem("accessToken",response.data.access);
         localStorage.setItem("refreshToken",response.data.refresh);
     }
@@ -32,7 +39,7 @@ export const getUser = (): UserModel | null => {
 
 export const isAdmin = (): boolean => {
     const user = getUser();
-    return user?.role === "admin";
+    return user?.role?.name === "admin";
 };
 
 

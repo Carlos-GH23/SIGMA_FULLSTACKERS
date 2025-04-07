@@ -45,14 +45,16 @@ const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", text
                         <IoClose size={30} />
                     </button>
 
-                    <h2 className="text-xl font-semibold text-center mb-4">{title}</h2>
-
+                    <h2 className="text-xl font-semibold text-center mb-4 font-serif">{title}</h2>
+                    <div className="w-full mx-auto mt-2 border-b-4 border-gray-800"></div>
+                    
                     <div className="mt-4 grid grid-cols-1 gap-3">{body}</div>
 
                     <div className={`grid ${(isAdmin() || isSave) ? 'grid-cols-3' : 'grid-cols-1'} gap-3 mt-5`}>
                         <button 
-                            onClick={onClose} 
-                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-lg col-span-1">
+                            onClick={onClose}
+                            style={{ backgroundColor: '#DB2828' }}
+                            className="hover:brightness-110 text-white font-bold py-3 px-4 rounded-lg col-span-1">
                             {textActionCancel}
                         </button>
                         {(isAdmin() || isSave) && (
@@ -61,7 +63,7 @@ const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", text
                                     if (!validateForm()) return;
                                     setShowAlert(true);
                                 }} 
-                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg col-span-2">
+                                className="bg-green-700 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg col-span-2">
                                 {textActionOk}
                             </button>
                         )}
@@ -75,14 +77,14 @@ const ModalForm = ({ isOpen, onClose, onSubmit, body, title = "Formulario", text
                 <AlertMessage
                     title={textConfirm}
                     body={textBodyConfirm}
-                    colorTitle="#F9B600"
+                    colorTitle="#D1A400"
                     onCancel={() => setShowAlert(false)}
                     onConfirm={() => {
                         setShowAlert(false);
                         onSubmit();
                     }}
                     isDelete={false}
-                    icon={<GoAlert className="text-yellow-500 text-8xl mb-4" />}
+                    icon={<GoAlert className="text-yellow-600 text-8xl mb-4" />}
                 />
             )}
         </>

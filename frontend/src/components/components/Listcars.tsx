@@ -148,7 +148,7 @@ const ListCars = () => {
             {/* Encabezado */}
             <div className="text-center my-4">
                 <h2 className="text-3xl font-extrabold text-gray-800 font-serif">Vehículos</h2>
-                <div className="w-full mx-auto mt-2 border-b-4 border-purple-800"></div>
+                <div className="w-full mx-auto mt-2 border-b-4 border-gray-800"></div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
                 {vehicles.map((vehicle) => (

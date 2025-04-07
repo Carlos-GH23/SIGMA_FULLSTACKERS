@@ -9,12 +9,13 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import SuccessMessage from "../General/SuccessMessage";
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
+import { getUser } from "../../services/AuthService";
 
 DataTable.use(DT);
 const ListCapturistas = () => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<UserModel[]>([]);
-  const [formData, setFormData] = useState<UserModel>({ id: 0, email: "", token: "", password: "", name: "", role: ""});
+  const [formData, setFormData] = useState<UserModel>({ id: 0, email: "", token: "", password: "", name: "", role: {id: 0, name: ""}});
   const [showPassword, setShowPassword] = useState(false);
   
   const [viewModalForm, setViewModalForm] = useState(false);
@@ -25,7 +26,7 @@ const ListCapturistas = () => {
 
   const userService = new CrudService<UserModel>("http://127.0.0.1:8000/users/api/");
   const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
-
+  const loggedUser = getUser();
 
   const fetchUsers = async () => {
     try {
@@ -65,8 +66,9 @@ const ListCapturistas = () => {
   
   const handleSubmit = async () => {
     try {
-      formData.role_id = 2;
-      if (formData.id === 0) {
+      
+      if (!isEdit) {
+        formData.role_id = 2;
         await userService.create(formData);
         setSuccessMessage("Capturista creado exitosamente");
       } else {
@@ -154,16 +156,20 @@ const ListCapturistas = () => {
                 </td>*/}
                 <td className="px-6 py-4">{user.name}</td>
                 <td className="px-6 py-4 flex space-x-3">
-                  <button
-                    className="w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-blue-600 transition cursor-pointer"
-                    onClick={() => { setFormData(user); toggleModalForm(); }}>
-                      <FaPen size={18} />
-                  </button>
-                  <button
-                    className="w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-700 transition cursor-pointer"
-                    onClick={() => handleDelete(user)}>
-                    <FaTrash size={18} />
-                  </button>
+                  {loggedUser?.id !== user.id && (
+                  <>
+                    <button
+                      className="w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-blue-600 transition cursor-pointer"
+                      onClick={() => { setFormData(user); toggleModalForm(); }}>
+                        <FaPen size={18} />
+                    </button>
+                    <button
+                      className="w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-700 transition cursor-pointer"
+                      onClick={() => handleDelete(user)}>
+                      <FaTrash size={18} />
+                    </button>
+                  </>
+                )}
                 </td>
               </tr>
             ))}
@@ -175,7 +181,7 @@ const ListCapturistas = () => {
       <button
         className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-lg hover:bg-green-700 transition"
         onClick={() => {
-          setFormData({ id: 0, email: "", token: "", password: "", name: "", role: "" });
+          setFormData({ id: 0, email: "", token: "", password: "", name: "", role: {id: 0, name: ""}});
           toggleModalForm();
         }}
       >
@@ -244,6 +250,7 @@ const ListCapturistas = () => {
           body={`¿Estás seguro de que deseas eliminar a ${selectedUser.name}?`}
           onCancel={() => setAlertMessage(false)}
           onConfirm={confirmDelete}
+          isDelete={true}
         />
       )}
 

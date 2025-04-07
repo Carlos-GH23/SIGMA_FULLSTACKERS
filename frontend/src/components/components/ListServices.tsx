@@ -189,79 +189,85 @@ const ListServices = () => {
                 title={isEdit ? "Editar Servicio" : "Registrar Servicio"}
                 textActionOk={isEdit ? "Actualizar" : "Guardar"}
                 body={
-                <>
-                    <div>
-                        <label className="block text-sm font-medium">Imagen</label>
-                        <div className="w-full h-40 bg-gray-100 flex items-center justify-center border rounded-lg">
-                            {formData.image_url ? (
+                    <>
+                        
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium">Imagen</label>
+                            <div className="w-full h-40 bg-gray-100 flex items-center justify-center border rounded-lg">
+                                {formData.image_url ? (
                                 <img src={formData.image_url} alt="Previsualización" className="h-full object-cover rounded-lg" />
-                            ) : (
+                                ) : (
                                 <span className="text-gray-500">No hay imagen seleccionada</span>
-                            )}
+                                )}
+                            </div>
+                            <input
+                                type="text"
+                                value={formData.image_url}
+                                onChange={(e) => handleChange("image_url", e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 mt-2"
+                                placeholder="Ingrese la URL de la imagen"
+                            />
                         </div>
-                        <input
-                            type="text"
-                            value={formData.image_url}
-                            onChange={(e) => handleChange("image_url", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 mt-2"
-                            placeholder="Ingrese la URL de la imagen"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium">Nombre</label>
-                        <input
-                            type="text"
-                            value={formData.name}
-                            onChange={(e) => handleChange("name", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium">Descripción</label>
-                        <input
-                            type="text"
-                            value={formData.description}
-                            onChange={(e) => handleChange("description", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium">Fecha de registro</label>
-                        <input
-                            type="date"
-                            value={formData.date ? formData.date.toString() : ""} 
-                            onChange={(e) => handleChange("date", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
-                    </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium">Nombre</label>
+                                <input
+                                    type="text"
+                                    value={formData.name}
+                                    onChange={(e) => handleChange("name", e.target.value)}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                                />
+                                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+                            </div>
                     
-                    <div>
-                        <label className="block text-sm font-medium">Costo</label>
-                        <input
-                            type="number"
-                            value={formData.cost}
-                            onChange={(e) => handleChange("cost", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.cost && <p className="text-red-500 text-sm">{errors.cost}</p>}
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium">Vehiculo</label>
-                        <input
-                            type="number"
-                            value={formData.vehicle}
-                            onChange={(e) => handleChange("vehicle", e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
-                        />
-                        {errors.vehicle && <p className="text-red-500 text-sm">{errors.vehicle}</p>}
-                    </div>
-                </>
+                            <div className="md:col-span-1">
+                                <label className="block text-sm font-medium">Costo</label>
+                                <input
+                                    type="number"
+                                    value={formData.cost}
+                                    onChange={(e) => handleChange("cost", e.target.value)}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                                />
+                                {errors.cost && <p className="text-red-500 text-sm">{errors.cost}</p>}
+                            </div>
+                    
+                            <div className="md:col-span-1">
+                                <label className="block text-sm font-medium">Fecha de registro</label>
+                                <input
+                                    type="date"
+                                    value={formData.date ? formData.date.toString() : ""}
+                                    onChange={(e) => handleChange("date", e.target.value)}
+                                    max={new Date().toISOString().split("T")[0]}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                                />
+                                {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
+                            </div>
+                        </div>
+                    
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium">Vehículo</label>
+                            <input
+                                type="number"
+                                value={formData.vehicle}
+                                onChange={(e) => handleChange("vehicle", e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                            />
+                            {errors.vehicle && <p className="text-red-500 text-sm">{errors.vehicle}</p>}
+                        </div>
+                    
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium">Descripción</label>
+                            <textarea
+                                value={formData.description}
+                                onChange={(e) => handleChange("description", e.target.value)}
+                                rows={5}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
+                                placeholder="Ingrese una descripción detallada"
+                            />
+                            {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
+                        </div>
+                    </>
                 }
                 textConfirm={isEdit ? "Confirmación actualización" : "Confirmación registro"}
                 textBodyConfirm={`¿Estás seguro de que deseas ${isEdit ? "actualizar la información del" : "registrar al nuevo"} vehiculo?`}

@@ -22,8 +22,9 @@ export class CrudService<T> {
             const refresh = localStorage.getItem("refreshToken");
             if (!refresh) throw new Error("No se pudo actualizar el token");
             const response = await axios.post("http://127.0.0.1:8000/users/token/refresh/", { refresh });
-            localStorage.setItem("accessToken", response.data.access);
-            return response.data.access;
+            const newAccessToken = response.data.access;
+            localStorage.setItem("accessToken", newAccessToken);
+            return true;
         } catch (error) {
             console.error("Error al refrescar el token", error);
             throw error;
