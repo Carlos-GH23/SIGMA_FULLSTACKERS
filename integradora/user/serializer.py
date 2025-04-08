@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from datetime import timedelta
 from .models import User
 from rol.models import Role
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -81,6 +82,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
+        token.set_exp(lifetime=timedelta(minutes=30))
         token['email'] = user.email
         return token
     

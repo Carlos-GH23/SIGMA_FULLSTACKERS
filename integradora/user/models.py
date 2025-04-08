@@ -26,6 +26,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=100)
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, related_name='users')
     objects = CustomUserManager()
+    reset_token = models.CharField(max_length=255, null=True, blank=True)
+    reset_token_created_at = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name', 'role']
