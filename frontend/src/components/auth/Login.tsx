@@ -2,9 +2,11 @@ import { login } from "../../services/AuthService";
 import React, { useState } from "react";
 import ErrorMessage from "../General/ErrorMessage";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 
 const Login = () => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -68,7 +70,7 @@ const Login = () => {
                             Iniciar Sesion
                         </button>
                         <div className="flex justify-center text-sm">
-                            <a href="#" className="text-purple-600 hover:underline">Olvide mi contraseña</a>
+                            <a href="#" className="text-purple-600 hover:underline" onClick={() => navigate('/recovery')} >Olvide mi contraseña</a>
                         </div>
                     </form>
                 </div>

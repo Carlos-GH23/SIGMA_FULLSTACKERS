@@ -10,6 +10,7 @@ import { isAdmin, isLoggedIn } from "../services/AuthService";
 import { AnimatePresence } from "framer-motion";
 import ListClients from "../components/components/ListClients";
 import ListServices from "../components/components/ListServices";
+import PasswordRecovery from "../pages/passwordrecovery";
 
 const AppRouter = () => {
     const location = useLocation();
@@ -44,6 +45,7 @@ const AppRouter = () => {
                 {/* Páginas de error */}
                 <Route path="/500" element={<ServerError />} />
                 <Route path="*" element={<NotFound />} />
+                <Route path="/recovery" element={<PasswordRecovery/>}></Route>
             </Routes>
         </AnimatePresence>
     )
