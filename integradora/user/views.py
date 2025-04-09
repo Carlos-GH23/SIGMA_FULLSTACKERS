@@ -266,7 +266,7 @@ class PasswordResetConfirmView(APIView):
             
             # Construir URL del logo
             logo_path = os.path.join(settings.BASE_DIR, 'static/images/logo.jpeg')
-            url_login = 'http://localhost:5173/login'
+            url_login = 'http://localhost:5173/'
                      
             # Enviar correo de confirmación
             try:

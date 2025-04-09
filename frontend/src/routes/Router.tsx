@@ -11,6 +11,7 @@ import { AnimatePresence } from "framer-motion";
 import ListClients from "../components/components/ListClients";
 import ListServices from "../components/components/ListServices";
 import PasswordRecovery from "../pages/passwordrecovery";
+import FormRecovery from "../pages/formRecovery";
 
 const AppRouter = () => {
     const location = useLocation();
@@ -20,10 +21,9 @@ const AppRouter = () => {
     return (
         <AnimatePresence>
             <Routes location={location} key={location.pathname}>
-                {/* Redirigir a Home si está logueado, sino al login */}
+              
                 <Route path="/" element={loggedIn ? <Navigate to={admin ? "/admin" : "/capturista"} /> : <Login />} />
 
-                {/* Rutas del Admin (solo accesibles si es admin) */}
                 {admin && (
                     <Route path="/admin" element={<Admin />}>
                         <Route path="capturistas" element={<ListCapturistas />} />
@@ -33,7 +33,6 @@ const AppRouter = () => {
                     </Route>
                 )}
 
-                {/* Rutas de Capturistas (solo accesibles si NO es admin) */}
                 {!admin && loggedIn && (
                     <Route path="/capturista" element={<Capturist/>}>
                         <Route path="clientes" element={<ListClients />} />
@@ -42,10 +41,12 @@ const AppRouter = () => {
                     </Route>
                 )}
 
-                {/* Páginas de error */}
                 <Route path="/500" element={<ServerError />} />
                 <Route path="*" element={<NotFound />} />
+
                 <Route path="/recovery" element={<PasswordRecovery/>}></Route>
+                <Route path="/reset-password" element={<FormRecovery/>} />
+
             </Routes>
         </AnimatePresence>
     )

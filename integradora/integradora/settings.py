@@ -159,7 +159,7 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # Usar su correo de UTEZ
-EMAIL_HOST_USER = ""
+EMAIL_HOST_USER = "20223tn119@utez.edu.mx"
 # Obtener de https://myaccount.google.com/apppasswords
-EMAIL_HOST_PASSWORD = ""
+EMAIL_HOST_PASSWORD = "avgo ipct skse mvmm"
 DEFAULT_FROM_EMAIL = 'no-reply@example.com'
