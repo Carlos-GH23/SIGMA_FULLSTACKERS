@@ -153,3 +153,13 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 AUTH_USER_MODEL = 'user.User'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+# Usar su correo de UTEZ
+EMAIL_HOST_USER = ""
+# Obtener de https://myaccount.google.com/apppasswords
+EMAIL_HOST_PASSWORD = ""
+DEFAULT_FROM_EMAIL = 'no-reply@example.com'
