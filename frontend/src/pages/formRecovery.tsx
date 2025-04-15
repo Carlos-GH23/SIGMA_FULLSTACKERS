@@ -1,11 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import ErrorMessage from "../components/General/ErrorMessage";
 import SuccessMessage from "../components/General/SuccessMessage";
 
 const FormRecovery = () => {
-    const navigate = useNavigate();
     const location = useLocation();  
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,12 +27,12 @@ const FormRecovery = () => {
         }
 
         try {
-            await axios.post('http://localhost:8000/users/password-reset/confirm/', {
+            const response = await axios.post('http://localhost:8000/users/password-reset/confirm/', {
                 uid: uid,
                 token: token,
-                new_password: newPassword,
+                password: newPassword,
             }).then
-            // Si la respuesta es exitosa, mostrar mensaje de éxito
+            console.log(response)
             setSuccess('Contraseña restablecida con éxito ya puedes ir al login');
             setErrorMessage(''); // Limpiar errores anteriores
         } catch (error) {
