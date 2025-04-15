@@ -20,7 +20,7 @@ export const login = async (email: string, password: string) => {
         localStorage.setItem("accessToken",response.data.access);
         localStorage.setItem("refreshToken",response.data.refresh);
     }
-    window.location.reload();
+    //window.location.reload();
     //return response.data;
 }
 

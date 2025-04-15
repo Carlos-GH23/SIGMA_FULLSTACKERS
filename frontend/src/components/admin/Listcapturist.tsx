@@ -10,6 +10,7 @@ import SuccessMessage from "../General/SuccessMessage";
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
 import { getUser } from "../../services/AuthService";
+import axios from "axios";
 
 DataTable.use(DT);
 const ListCapturistas = () => {
@@ -59,14 +60,23 @@ const ListCapturistas = () => {
     let newErrors: { name?: string; email?: string; password?: string } = {};
     if (!formData.name.trim()) newErrors.name = "El nombre es obligatorio";
     if (!formData.email.trim()) newErrors.email = "El correo es obligatorio";
-    if (!formData.password || !formData.password.trim()) newErrors.password = "La contraseña es obligatoria";
+
+    const password = formData.password || "";
+    if (!password.trim()) {
+      newErrors.password = "La contraseña es obligatoria";
+    } else {
+      const regex = /^(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,})/;
+      if (!regex.test(password)) {
+        newErrors.password = "La contraseña debe tener al menos 8 caracteres, una mayúscula y un carácter especial";
+      }
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
   
   const handleSubmit = async () => {
+    setErrorMessage("");
     try {
-      
       if (!isEdit) {
         formData.role_id = 2;
         await userService.create(formData);
@@ -75,12 +85,26 @@ const ListCapturistas = () => {
         await userService.update(formData.id, formData);
         setSuccessMessage("Capturista editado exitosamente");
       }
-      fetchUsers();
-    } catch (error) {
-      setErrorMessage(`${error}`);
-    } finally {
       setAlertMessage(false);
       toggleModalForm();
+      fetchUsers();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const data = error.response?.data;
+        if (data?.email) {
+          console.log(data.email[0]);
+          if(data.email[0] === "user with this email already exists."){
+            setErrorMessage("El correo ya se encuentra registrado");
+          } else {
+            setErrorMessage('Error con respecto al correo');
+          }
+          
+        } else {
+          setErrorMessage("Ocurrió un error al procesar la solicitud.");
+        }
+      } else {
+        setErrorMessage("Ocurrió un error al procesar la solicitud.");
+      }
     }
   };
 
@@ -90,6 +114,7 @@ const ListCapturistas = () => {
   };
 
   const confirmDelete = async () => {
+    setErrorMessage("");
     try {
       if (selectedUser) {
           await userService.delete(selectedUser.id);

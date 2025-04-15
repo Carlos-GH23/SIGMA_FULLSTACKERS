@@ -6,4 +6,5 @@ export interface ServiceModel {
     cost: number;
     vehicle: number;
     image_url?: string;
+    next_service?: Date;
 }

@@ -36,7 +36,6 @@ const Sidebar = ({ user }: { user: string }) => {
     { name: "Clientes", path: "clientes", icon: <HiMiniUsers size={30} /> },
     { name: "Vehiculos", path: "vehiculos", icon: <FaCar size={30} /> },
     { name: "Servicios", path: "servicios", icon: <MdHomeRepairService size={30} /> },
-    { name: "Citas", path: "citas", icon: <HiMiniCalendarDays size={30} /> },
   ];
 
 
@@ -45,7 +44,6 @@ const Sidebar = ({ user }: { user: string }) => {
     { name: "Clientes", path: "clientes", icon: <HiMiniUsers size={30} /> },
     { name: "Vehiculos", path: "vehiculos", icon: <FaCar size={30} /> },
     { name: "Servicios", path: "servicios", icon: <MdHomeRepairService size={30} /> },
-    { name: "Citas", path: "citas", icon: <HiMiniCalendarDays size={30} /> },
   ];
 
 

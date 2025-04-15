@@ -12,6 +12,7 @@ import ListClients from "../components/components/ListClients";
 import ListServices from "../components/components/ListServices";
 import PasswordRecovery from "../pages/passwordrecovery";
 import FormRecovery from "../pages/formRecovery";
+import Dashboard from "../components/components/Dashboard";
 
 const AppRouter = () => {
     const location = useLocation();
@@ -21,11 +22,11 @@ const AppRouter = () => {
     return (
         <AnimatePresence>
             <Routes location={location} key={location.pathname}>
-              
                 <Route path="/" element={loggedIn ? <Navigate to={admin ? "/admin" : "/capturista"} /> : <Login />} />
 
                 {admin && (
                     <Route path="/admin" element={<Admin />}>
+                        <Route path="inicio" element={<Dashboard />} />
                         <Route path="capturistas" element={<ListCapturistas />} />
                         <Route path="clientes" element={<ListClients />} />
                         <Route path="vehiculos" element={<ListCars />} />
@@ -35,6 +36,7 @@ const AppRouter = () => {
 
                 {!admin && loggedIn && (
                     <Route path="/capturista" element={<Capturist/>}>
+                        <Route path="inicio" element={<Dashboard />} />
                         <Route path="clientes" element={<ListClients />} />
                         <Route path="vehiculos" element={<ListCars />} />
                         <Route path="servicios" element={<ListServices />} />

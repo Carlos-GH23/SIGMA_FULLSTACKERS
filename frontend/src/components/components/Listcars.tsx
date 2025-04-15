@@ -10,6 +10,7 @@ import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
 import { isAdmin } from "../../services/AuthService";
 import { ClientModel } from "../../models/ClientModel";
+import axios from "axios";
 
 DataTable.use(DT);
 const ListCars = () => {
@@ -62,8 +63,6 @@ const ListCars = () => {
     };
 
     const handleChange = (key: keyof VehicleModel, value: string | number | Date) => {
-        
-
         setFormData({ ...formData, [key]: value });
         setErrors((prevErrors) => ({ ...prevErrors, [key]: undefined }));
     };
@@ -86,6 +85,7 @@ const ListCars = () => {
     };
 
     const handleSubmit = async () => {
+        setErrorMessage("");
         try {
             const editNewVehicle = {
                 brand: formData.brand,
@@ -105,12 +105,26 @@ const ListCars = () => {
                 await crudService.update(formData.id, editNewVehicle as VehicleModel);
                 setSuccessMessage("Vehiculo editado exitosamente");
             }
-            fetchVehicles();
-        } catch (error) {
-            setErrorMessage(`${error}`);
-        } finally {
             setAlertMessage(false);
             toggleModalForm();
+            fetchVehicles();
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const data = error.response?.data;
+                if (data?.plate) {
+                    console.log(data.plate[0]);
+                    if(data.plate[0] === "vehicle with this plate already exists."){
+                        setErrorMessage("Las placas ya se encuentra registradas");
+                    } else {
+                        setErrorMessage('Error con respecto a las placas');
+                    }  
+                } else {
+                    setErrorMessage("Ocurrió un error al procesar la solicitud.");
+                }
+            } else {
+                setErrorMessage("Ocurrió un error al procesar la solicitud.");
+                //setErrorMessage(`${error}`);
+            }  
         }
     };
 
@@ -120,6 +134,7 @@ const ListCars = () => {
     };
 
     const confirmDelete = async () => {
+        setErrorMessage("");
         try {
             if (selectedVehicle) {
                 await crudService.delete(selectedVehicle.id);
@@ -169,10 +184,10 @@ const ListCars = () => {
 
                         {/* Contenedor de detalles en dos columnas */}
                         <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
-                        <p><span className="font-semibold text-gray-800">Año:</span> {vehicle.year}</p>
-                        <p><span className="font-semibold text-gray-800">Placa:</span> {vehicle.plate}</p>
-                        <p><span className="font-semibold text-gray-800">Color:</span> {vehicle.color}</p>
-                        <p><span className="font-semibold text-gray-800">Combustible:</span> {vehicle.fuel_type}</p>
+                            <p><span className="font-semibold text-gray-800">Año:</span> {vehicle.year}</p>
+                            <p><span className="font-semibold text-gray-800">Placa:</span> {vehicle.plate}</p>
+                            <p><span className="font-semibold text-gray-800">Color:</span> {vehicle.color}</p>
+                            <p><span className="font-semibold text-gray-800">Combustible:</span> {vehicle.fuel_type}</p>
                         </div>
 
                         <div className="mt-4 flex gap-2">
@@ -304,7 +319,7 @@ const ListCars = () => {
                                 <option value="" disabled hidden>Seleccionar</option>
                                 <option value="Gasolina regular">Gasolina regular</option>
                                 <option value="Gasolina premium">Gasolina premium</option>
-                                <option value="Gasolina sin plomo 95">Gasolina sin plomo 95</option>
+                                <option value="Gasolina sin plomo">Gasolina sin plomo</option>
                                 <option value="Electrico">Electrico</option>
                             </select>
                             {errors.fuel_type && <p className="text-red-500 text-sm">{errors.fuel_type}</p>}

@@ -1,4 +1,4 @@
-import { login } from "../../services/AuthService";
+import { isAdmin, login } from "../../services/AuthService";
 import React, { useState } from "react";
 import ErrorMessage from "../General/ErrorMessage";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -16,6 +16,11 @@ const Login = () => {
         e.preventDefault();
         try {
             await login(username, password);
+            if (isAdmin()) {
+                navigate("/admin/inicio");
+            } else {
+                navigate("/capturista/inicio");
+            }
         } catch (err) {
             setErrorMessage("");
             setTimeout(() => setErrorMessage("Usuario o contraseña incorrectos"), 10);

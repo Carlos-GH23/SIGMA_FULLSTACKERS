@@ -13,8 +13,3 @@ class ServiceViewSet(viewsets.ModelViewSet):
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-
-
-
-
-    

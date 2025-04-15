@@ -75,6 +75,7 @@ const ListClients = () => {
     };
 
     const handleSubmit = async () => {
+        setErrorMessage("");
         try {
             const editNewClient = {
                 name: formData.name,
@@ -90,12 +91,11 @@ const ListClients = () => {
                 await crudService.update(formData.id, editNewClient as ClientModel);
                 setSuccessMessage("Cliente editado exitosamente");
             }
+            setAlertMessage(false);
+            toggleModalForm();
             fetchClients();
         } catch (error) {
             setErrorMessage(`${error}`);
-        } finally {
-            setAlertMessage(false);
-            toggleModalForm();
         }
     };
 
@@ -105,6 +105,7 @@ const ListClients = () => {
     };
 
     const confirmDelete = async () => {
+        setErrorMessage("");
         try {
             if (selectedClient) {
                 await crudService.delete(selectedClient.id);
