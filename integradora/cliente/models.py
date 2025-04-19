@@ -4,8 +4,8 @@ from django.utils import timezone
 class Client(models.Model):
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
-    telephone = models.CharField(max_length=100)
-    email = models.EmailField()
+    telephone = models.CharField(max_length=100, unique=True)
+    email = models.EmailField(unique=True)
     gender = models.CharField(max_length=100)
     register_date = models.DateTimeField(default=timezone.now, editable=False)  
     
