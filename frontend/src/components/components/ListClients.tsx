@@ -9,7 +9,7 @@ import SuccessMessage from "../General/SuccessMessage";
 import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
 import { isAdmin } from "../../services/AuthService";
-
+import { API_ENDPOINTS } from "../General/ApiConfig";
 
 DataTable.use(DT);
 const ListClients = () => {
@@ -23,7 +23,7 @@ const ListClients = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
-    const crudService = new CrudService<ClientModel>("http://127.0.0.1:8000/cliente/api/");
+    const crudService = new CrudService<ClientModel>(API_ENDPOINTS.clients);
     const [errors, setErrors] = useState<{ name?: string; surname?: string; telephone?: string; email?: string; gender?: string }>({});
 
     const fetchClients = async () => {
@@ -132,13 +132,13 @@ const ListClients = () => {
     return (
         <div className="pt-4 w-full ">
             {/* Encabezado */}
-            <div className="w-full h-15 rounded-lg bg-gray-900 text-white mb-2 flex justify-center items-center">
+            <div className="w-full h-16 rounded-xl bg-gray-900 text-white mb-4 flex justify-center items-center shadow-lg">
                 <h2 className="text-2xl font-bold text-center font-serif">Clientes</h2>
             </div>
 
 
             {/* Tabla de usuarios */}
-            <div className="max-h-[calc(88vh-80px)] overflow-y-auto min-h-[200px] bg-white shadow-md rounded-lg p-4">
+            <div className="overflow-y-auto min-h-[200px] bg-white shadow-md rounded-lg p-4">
                 <DataTable className="min-w-full table-auto display"
                     options={{
                         language: {
@@ -267,7 +267,7 @@ const ListClients = () => {
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400">
                                 <option value="" disabled hidden>Seleccionar</option>
                                 <option value="Masculino">Masculino</option>
-                                <option value="Femenino">Femenino</option>
+                                <option value="Femenina">Femenina</option>
                                 <option value="Sin definir">Sin definir</option>
                             </select>
                             {errors.gender && <p className="text-red-500 text-sm">{errors.gender}</p>}

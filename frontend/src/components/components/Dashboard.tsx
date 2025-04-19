@@ -3,12 +3,14 @@ import { ClientModel } from "../../models/ClientModel";
 import { VehicleModel } from "../../models/VehicleModel";
 import { ServiceModel } from "../../models/ServiceModel";
 import { CrudService } from "../../services/crudService";
+import { API_ENDPOINTS } from "../General/ApiConfig";
+import { FaFilter } from "react-icons/fa";
 
 const Dashboard = () => {
     // Clientes
     const [clients, setClients] = useState<ClientModel[]>([]);
     const [loadingClients, setLoadingClients] = useState(false);
-    const clientApi = new CrudService<ClientModel>("http://127.0.0.1:8000/cliente/api/");
+    const clientApi = new CrudService<ClientModel>(API_ENDPOINTS.clients);
     const fetchClients = async () => {
         try {
             setLoadingClients(true);
@@ -24,7 +26,7 @@ const Dashboard = () => {
     //Vehiculos
     const [vehicles, setVehicles] = useState<VehicleModel[]>([]);
     const [loadingVehicles, setLoadingVehicles] = useState(false);
-    const vehicleApi = new CrudService<VehicleModel>("http://127.0.0.1:8000/vehiculo/api/");
+    const vehicleApi = new CrudService<VehicleModel>(API_ENDPOINTS.cars);
     const fetchVehicles = async () => {
         try {
             setLoadingVehicles(true);
@@ -40,7 +42,7 @@ const Dashboard = () => {
     //Servicios
     const [services, setServices] = useState<ServiceModel[]>([]);
     const [loadingServices, setLoadingServices] = useState(false);
-    const serviceApi = new CrudService<ServiceModel>("http://127.0.0.1:8000/vehiculo/servicio/api/");
+    const serviceApi = new CrudService<ServiceModel>(API_ENDPOINTS.services);
     const fetchServices = async () => {
         try {
             setLoadingServices(true);
@@ -53,6 +55,13 @@ const Dashboard = () => {
         }
     };
 
+    const [showFilter, setShowFilter] = useState(false);
+    const [limitDate, setLimitDate] = useState(() => {
+        const defaultDate = new Date();
+        defaultDate.setDate(defaultDate.getDate() + 7);
+        return defaultDate;
+    });
+
     useEffect(() => {
         fetchClients();
         fetchVehicles();
@@ -63,13 +72,25 @@ const Dashboard = () => {
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(today.getDate() + 7);
 
+    const toggleFilter = () => setShowFilter(!showFilter);
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (!value) {
+            const defaultDate = new Date();
+            defaultDate.setDate(defaultDate.getDate() + 7);
+            setLimitDate(defaultDate);
+        } else {
+            setLimitDate(new Date(value));
+        }
+    };
+    
+
     const upcomingServices = services.filter(
         (s) =>
             s.next_service &&
             new Date(s.next_service) >= today &&
-            new Date(s.next_service) <= sevenDaysFromNow
+            new Date(s.next_service) <= limitDate
     );
-
     const getClientById = (id: number) => clients.find(c => c.id === id);
     const getVehicleById = (id: number) => vehicles.find(v => v.id === id);
 
@@ -88,7 +109,32 @@ const Dashboard = () => {
             </div>
 
             {/* Citas próximas */}
-            <h2 className="text-xl font-bold mb-4">Citas Próximas</h2>
+            <div className="flex items-center justify-between mb-4 relative">
+                <h2 className="text-xl font-bold">Citas Próximas</h2>
+                <div className="relative">
+                    <button
+                        onClick={toggleFilter}
+                        className="text-gray-600 hover:text-gray-800 transition ml-2"
+                        title="Filtrar por fecha"
+                    >
+                        <FaFilter size={18} />
+                    </button>
+                    {showFilter && (
+                        <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-300 rounded-md shadow-md p-3 z-10">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Mostrar hasta:
+                            </label>
+                            <input
+                                type="date"
+                                className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                                value={limitDate.toISOString().split("T")[0]}
+                                onChange={handleDateChange}
+                                min={new Date().toISOString().split("T")[0]}
+                            />
+                        </div>
+                    )}
+                </div>
+            </div>
             <div className="flex flex-wrap gap-4">
                 {upcomingServices.length > 0 ? (
                     upcomingServices.map(service => {

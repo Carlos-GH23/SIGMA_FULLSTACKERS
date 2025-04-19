@@ -10,6 +10,7 @@ import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
 import { isAdmin } from "../../services/AuthService";
 import { VehicleModel } from "../../models/VehicleModel";
+import { API_ENDPOINTS } from "../General/ApiConfig";
 
 DataTable.use(DT);
 const ListServices = () => {
@@ -23,8 +24,8 @@ const ListServices = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
-    const crudService = new CrudService<ServiceModel>("http://127.0.0.1:8000/vehiculo/servicio/api/");
-    const vehicleService = new CrudService<VehicleModel>("http://127.0.0.1:8000/vehiculo/api/");
+    const crudService = new CrudService<ServiceModel>(API_ENDPOINTS.services);
+    const vehicleService = new CrudService<VehicleModel>(API_ENDPOINTS.cars);
     const [errors, setErrors] = useState<{ name?: string; description?: string; date?: string; cost?: string; vehicle?: string, image_url?: string, next_service?: string }>({});
 
     const [vehicles, setVehicles] = useState<VehicleModel[]>([]);

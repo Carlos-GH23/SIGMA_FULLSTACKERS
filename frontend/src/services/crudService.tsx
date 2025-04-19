@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_ENDPOINTS } from "../components/General/ApiConfig";
 
 export class CrudService<T> {
     private url: string;
@@ -21,9 +22,11 @@ export class CrudService<T> {
         try {
             const refresh = localStorage.getItem("refreshToken");
             if (!refresh) throw new Error("No se pudo actualizar el token");
-            const response = await axios.post("http://127.0.0.1:8000/users/token/refresh/", { refresh });
-            const newAccessToken = response.data.access;
-            localStorage.setItem("accessToken", newAccessToken);
+            const response = await axios.post(API_ENDPOINTS.refresh, { refresh });
+            console.log("Token actualizado 1:", response);
+            console.log("Token actualizado 2:", response.data);
+            console.log("Token actualizado 3:", response.data.access);
+            localStorage.setItem("accessToken", response.data.access);
             return true;
         } catch (error) {
             console.error("Error al refrescar el token", error);

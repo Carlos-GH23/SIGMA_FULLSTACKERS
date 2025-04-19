@@ -11,6 +11,7 @@ import DT from 'datatables.net-dt';
 import { isAdmin } from "../../services/AuthService";
 import { ClientModel } from "../../models/ClientModel";
 import axios from "axios";
+import { API_ENDPOINTS } from "../General/ApiConfig";
 
 DataTable.use(DT);
 const ListCars = () => {
@@ -24,8 +25,8 @@ const ListCars = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
-    const crudService = new CrudService<VehicleModel>("http://127.0.0.1:8000/vehiculo/api/");
-    const clientService = new CrudService<ClientModel>("http://127.0.0.1:8000/cliente/api/");
+    const crudService = new CrudService<VehicleModel>(API_ENDPOINTS.cars);
+    const clientService = new CrudService<ClientModel>(API_ENDPOINTS.clients);
     const [errors, setErrors] = useState<{ brand?: string; model?: string; service_number?: string; year?: string; plate?: string, color?: string, fuel_type?: string, client?: string, image_url?: string }>({});
 
     const [clients, setClients] = useState<ClientModel[]>([]);

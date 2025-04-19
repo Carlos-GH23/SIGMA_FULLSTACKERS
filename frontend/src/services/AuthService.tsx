@@ -1,18 +1,17 @@
 import axios from "axios";
 import { UserModel } from "../models/UserModel";
-
-const API_URL = "http://127.0.0.1:8000/users/token/" //Se cambiara la URL a la indicada
+import { API_ENDPOINTS } from "../components/General/ApiConfig";
 
 export const login = async (email: string, password: string) => {
-    const response = await axios.post(API_URL, {email, password});
+    const response = await axios.post(API_ENDPOINTS.login, {email, password});
     console.log(response.data);
-
+    console.log(response.data.user.role);
     if(response.data.access){
         const user: UserModel = response.data.user;
         const formattedUser: UserModel = {
             ...user,
             role: {
-                id: response.data.user.role == "admin" ? 1 : 2, 
+                id: response.data.user.role == "Admin" ? 1 : 2, 
                 name: response.data.user.role
             }
         };
@@ -39,7 +38,7 @@ export const getUser = (): UserModel | null => {
 
 export const isAdmin = (): boolean => {
     const user = getUser();
-    return user?.role?.name === "admin";
+    return user?.role?.name === "Admin";
 };
 
 

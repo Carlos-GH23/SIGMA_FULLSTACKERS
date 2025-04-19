@@ -11,6 +11,7 @@ import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
 import { getUser } from "../../services/AuthService";
 import axios from "axios";
+import { API_ENDPOINTS } from "../General/ApiConfig";
 
 DataTable.use(DT);
 const ListCapturistas = () => {
@@ -25,7 +26,7 @@ const ListCapturistas = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const userService = new CrudService<UserModel>("http://127.0.0.1:8000/users/api/");
+  const userService = new CrudService<UserModel>(API_ENDPOINTS.users);
   const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
   const loggedUser = getUser();
 

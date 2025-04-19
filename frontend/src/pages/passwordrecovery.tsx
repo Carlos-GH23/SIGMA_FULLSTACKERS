@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import ErrorMessage from "../components/General/ErrorMessage";
 import SuccessMessage from "../components/General/SuccessMessage";
+import { API_ENDPOINTS } from "../components/General/ApiConfig";
 
 const PasswordRecovery = () => {
   const [email, setEmail] = useState("")
@@ -11,7 +12,7 @@ const PasswordRecovery = () => {
   const handleRecovery = async (e: React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:8000/users/password-reset/', { email });
+      await axios.post(API_ENDPOINTS.resertPassword, { email });
       setSuccess("");
       setTimeout(() => setSuccess("Revisa tu correo electronico ya puedes cerrar esta pagina"), 10);
     } catch (error) {
