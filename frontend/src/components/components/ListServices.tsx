@@ -226,6 +226,7 @@ const ListServices = () => {
                 validateForm={validateForm}
                 title={isEdit ? "Editar Servicio" : "Registrar Servicio"}
                 textActionOk={isEdit ? "Actualizar" : "Guardar"}
+                isSave={!isEdit}
                 body={
                     <>
                         <div className="mb-4">
