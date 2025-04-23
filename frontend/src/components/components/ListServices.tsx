@@ -76,11 +76,25 @@ const ListServices = () => {
     const validateForm = () => {
         let newErrors: { name?: string; description?: string; date?: string; cost?: string; vehicle?: string, image_url?: string } = {};
     
-        if (!formData.name.trim()) newErrors.name = "El nombre es obligatorio";
-        if (!formData.description.trim()) newErrors.description = "La descripción es obligatorio";
-        if (!formData.date) newErrors.date = "La fecha es obligatoria";
-        if (formData.cost === undefined || formData.cost === null || formData.cost === 0) newErrors.cost = "El costo es obligatorio";
-        if (formData.vehicle === undefined || formData.vehicle === null || formData.vehicle === 0) newErrors.vehicle = "El vehiculo es obligatorio";
+        if (!formData.name.trim()) {
+            newErrors.name = "El nombre es obligatorio";
+        } else if (!/^[a-zA-ZÁÉÍÓÚáéíóúÑñ0-9\s]+$/.test(formData.name)) {
+            newErrors.name = "El nombre no debe contener caracteres especiales";
+        }
+        if (!formData.description.trim()) {
+            newErrors.description = "La descripción es obligatoria";
+        }
+        if (!formData.date) {
+            newErrors.date = "La fecha es obligatoria";
+        }
+        if (formData.cost === undefined || formData.cost === null || formData.cost === 0) {
+            newErrors.cost = "El costo es obligatorio";
+        } else if (!/^\d+(\.\d{1,2})?$/.test(formData.cost.toString())) {
+            newErrors.cost = "Ingrese un costo válido (ej. 1000 o 1000.50)";
+        }
+        if (!formData.vehicle || formData.vehicle === 0) {
+            newErrors.vehicle = "El vehículo es obligatorio";
+        }
     
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;

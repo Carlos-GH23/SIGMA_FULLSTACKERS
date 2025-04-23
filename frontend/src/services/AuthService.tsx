@@ -38,7 +38,7 @@ export const getUser = (): UserModel | null => {
 
 export const isAdmin = (): boolean => {
     const user = getUser();
-    return user?.role?.name === "Admin";
+    return user?.role?.name === "Admin" || user?.role?.name === "admin" ;
 };
 
 

@@ -71,19 +71,48 @@ const ListCars = () => {
     const validateForm = () => {
         let newErrors: { brand?: string; model?: string; service_number?: string; year?: string; plate?: string, color?: string, fuel_type?: string, client?: string } = {};
     
-        if (!formData.brand.trim()) newErrors.brand = "La marca es obligatorio";
-        if (!formData.model.trim()) newErrors.model = "El modelo es obligatorio";
-        if (formData.service_number === undefined || formData.service_number === null || formData.service_number === 0) newErrors.service_number = "El num. de servicio es obligatorio";
-        if (formData.year === undefined || formData.year === null || formData.year === 0) newErrors.year = "El año es obligatorio";
+        if (!formData.brand.trim()) {
+            newErrors.brand = "La marca es obligatoria";
+        } else if (!/^[A-Za-zÁÉÍÓÚÑáéíóúñ0-9\s]+$/.test(formData.brand)) {
+            newErrors.brand = "La marca no debe contener caracteres especiales";
+        }
+    
+        if (!formData.model.trim()) {
+            newErrors.model = "El modelo es obligatorio";
+        } else if (!/^[A-Za-zÁÉÍÓÚÑáéíóúñ0-9\s]+$/.test(formData.model)) {
+            newErrors.model = "El modelo no debe contener caracteres especiales";
+        }
+    
+        if (formData.service_number === undefined || formData.service_number === null || formData.service_number === 0) {
+            newErrors.service_number = "El número de servicio es obligatorio";
+        }
+    
         if (!formData.year) newErrors.year = "El año es obligatorio";
-        if (!formData.plate.trim()) newErrors.plate = "La placa es obligatoria";
-        if (!formData.color.trim()) newErrors.color = "El color es obligatoria";
-        if (!formData.fuel_type.trim()) newErrors.fuel_type = "El tipó de combustible es obligatoria";
-        if (formData.client === undefined || formData.client === null || formData.client === 0) newErrors.client = "El cliente es obligatorio";
+    
+        if (!formData.plate.trim()) {
+            newErrors.plate = "La placa es obligatoria";
+        } else if (!/^[A-Za-z0-9\s-]+$/.test(formData.plate)) {
+            newErrors.plate = "La placa no debe contener caracteres especiales";
+        }
+    
+        if (!formData.color.trim()) {
+            newErrors.color = "El color es obligatorio";
+        } else if (!/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$/.test(formData.color)) {
+            newErrors.color = "El color no debe contener números ni caracteres especiales";
+        }
+    
+        if (!formData.fuel_type.trim()) {
+            newErrors.fuel_type = "El tipo de combustible es obligatorio";
+        }
+    
+        if (formData.client === undefined || formData.client === null || formData.client === 0) {
+            newErrors.client = "El cliente es obligatorio";
+        }
     
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+    
 
     const handleSubmit = async () => {
         setErrorMessage("");

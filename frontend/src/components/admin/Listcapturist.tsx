@@ -59,8 +59,18 @@ const ListCapturistas = () => {
 
   const validateForm = () => {
     let newErrors: { name?: string; email?: string; password?: string } = {};
-    if (!formData.name.trim()) newErrors.name = "El nombre es obligatorio";
-    if (!formData.email.trim()) newErrors.email = "El correo es obligatorio";
+    if (!formData.name.trim()) {
+      newErrors.name = "El nombre es obligatorio";
+    } else if (!/^[A-Za-zÁÉÍÓÚÑáéíóúñ0-9\s]+$/.test(formData.name)) {
+      newErrors.name = "El nombre no debe contener caracteres especiales";
+    }    
+    if (!formData.email.trim()) {
+      newErrors.email = "El correo es obligatorio";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "El correo no tiene un formato válido";
+    } else if (/\s/.test(formData.email)) {
+      newErrors.email = "El correo no debe contener espacios";
+    }
 
     const password = formData.password || "";
     if (!password.trim()) {

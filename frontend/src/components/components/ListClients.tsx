@@ -64,10 +64,29 @@ const ListClients = () => {
     const validateForm = () => {
         let newErrors: { name?: string; surname?: string; telephone?: string; email?: string; gender?: string } = {};
 
-        if (!formData.name.trim()) newErrors.name = "El nombre es obligatorio";
-        if (!formData.surname.trim()) newErrors.surname = "El apellido es obligatorio";
-        if (!formData.telephone.trim()) newErrors.telephone = "El telefono es obligatorio";
-        if (!formData.email.trim()) newErrors.email = "El correo es obligatorio";
+        if (!formData.name.trim()) {
+            newErrors.name = "El nombre es obligatorio";
+        } else if (!/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$/.test(formData.name)) {
+            newErrors.name = "El nombre no debe contener números ni caracteres especiales";
+        }
+        if (!formData.surname?.trim()) {
+            newErrors.surname = "Los apellidos son obligatorios";
+        } else if (!/^[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+$/.test(formData.surname)) {
+            newErrors.surname = "Los apellidos no deben contener números ni caracteres especiales";
+        }
+        if (!formData.telephone?.trim()) {
+            newErrors.telephone = "El teléfono es obligatorio";
+        } else if (!/^\d{10}$/.test(formData.telephone)) {
+            newErrors.telephone = "El teléfono debe contener exactamente 10 dígitos numéricos";
+        }
+        if (!formData.email.trim()) {
+            newErrors.email = "El correo es obligatorio";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = "El correo no tiene un formato válido";
+        } else if (/\s/.test(formData.email)) {
+            newErrors.email = "El correo no debe contener espacios";
+        }
+        
         if (!formData.gender.trim()) newErrors.gender = "El genero es obligatoria";
 
         setErrors(newErrors);
@@ -244,6 +263,9 @@ const ListClients = () => {
                                 type="text"
                                 value={formData.telephone}
                                 onChange={(e) => handleChange("telephone", e.target.value)}
+                                maxLength={10}
+                                inputMode="numeric"
+                                pattern="\d*"
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
                             />
                             {errors.telephone && <p className="text-red-500 text-sm">{errors.telephone}</p>}
@@ -252,7 +274,7 @@ const ListClients = () => {
                         <div>
                             <label className="block text-sm font-medium">Correo</label>
                             <input
-                                type="text"
+                                type="email"
                                 value={formData.email}
                                 onChange={(e) => handleChange("email", e.target.value)}
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400"
